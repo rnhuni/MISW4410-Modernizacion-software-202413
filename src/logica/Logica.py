@@ -1,8 +1,12 @@
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 
 class Logica(FachadaCajaDeSeguridad):
+    
+    def __init__(self):
+        self.clave_maestra = 'clave'
+
     def dar_claveMaestra(self):
-        return None
+        return self.clave_maestra
     
     def dar_claves_favoritas(self):
         return None
