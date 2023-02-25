@@ -1,5 +1,6 @@
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
+from src.modelo.elemento import Elemento
 from src.modelo.declarative_base import engine, Base, session
 
 class Logica(FachadaCajaDeSeguridad):        
@@ -27,5 +28,6 @@ class Logica(FachadaCajaDeSeguridad):
         return None
     
     def dar_elementos(self):
+        self.elementos = session.query(Elemento).all()
         return self.elementos
     
