@@ -1,7 +1,7 @@
 import unittest
 
 from src.logica.Logica import Logica
-from src.modelo.clave_favorita import Elemento
+from src.modelo.elemento import Elemento
 from src.modelo.declarative_base import Session
 
 class ElementoTestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class ElementoTestCase(unittest.TestCase):
     self.assertIsNotNone(elemento)
 
   def test_elemento_02(self):
-    nuevo_elemento = Elemento(nombreElemento="Elemento de prueba", notas="Nota 0", claveFavorita=None)
+    nuevo_elemento = Elemento(nombreElemento="Elemento de prueba", notas="Nota 0")
     self.session.add(nuevo_elemento)
     self.session.commit()
     self.session.close()
