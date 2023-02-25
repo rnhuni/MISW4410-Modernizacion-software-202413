@@ -1,4 +1,5 @@
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
+from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.declarative_base import engine, Base, session
 
 class Logica(FachadaCajaDeSeguridad):        
@@ -14,6 +15,7 @@ class Logica(FachadaCajaDeSeguridad):
         return self.clave_maestra
     
     def dar_claves_favoritas(self):
+        self.claves_favoritas = session.query(ClaveFavorita).all()
         return self.claves_favoritas
     
     def crear_clave(self, nombre, clave, pista):

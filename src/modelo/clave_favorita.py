@@ -13,3 +13,11 @@ class ClaveFavorita(Base):
     nombre = Column(String)
     clave = Column(String)
     pista = Column(String)
+
+    def __getitem__(self, indice):
+        if indice == 'nombre':
+            return self.nombre
+        if indice == 'clave':
+            return self.clave
+        if indice == 'pista':
+            return self.pista
