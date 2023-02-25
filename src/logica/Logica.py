@@ -11,6 +11,8 @@ class Logica(FachadaCajaDeSeguridad):
 
         self.claves_favoritas = []
 
+        self.elementos = []
+
     def dar_claveMaestra(self):
         return self.clave_maestra
     
@@ -25,5 +27,5 @@ class Logica(FachadaCajaDeSeguridad):
         return None
     
     def dar_elementos(self):
-        return None
+        return self.elementos
     
