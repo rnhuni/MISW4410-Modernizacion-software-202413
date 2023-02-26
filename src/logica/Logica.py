@@ -1,3 +1,4 @@
+import random
 import string
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
@@ -54,3 +55,15 @@ class Logica(FachadaCajaDeSeguridad):
                 sin_espacios = False
         
         return tiene_mayusculas and tiene_minusculas and tiene_cespeciales and sin_espacios
+    
+    def generar_clave(self):
+        longitud = random.randint(8, 16)
+        caracteres_posibles = string.digits + string.punctuation + string.ascii_letters
+        
+        while True:
+            clave_candidata = ''        
+            for i in range(longitud):
+                clave_candidata += random.choice(caracteres_posibles)
+            
+            if self.es_clave_segura(clave_candidata):
+                return clave_candidata
