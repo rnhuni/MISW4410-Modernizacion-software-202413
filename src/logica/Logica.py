@@ -31,3 +31,7 @@ class Logica(FachadaCajaDeSeguridad):
         self.elementos = session.query(Elemento).all()
         return self.elementos
     
+    def crear_clave(self, nombre, clave, pista):
+        if nombre is None or clave is None or pista is None:
+            return False
+        return True
