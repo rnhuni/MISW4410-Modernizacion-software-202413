@@ -23,12 +23,6 @@ class Logica(FachadaCajaDeSeguridad):
         self.claves_favoritas = session.query(ClaveFavorita).all()
         return self.claves_favoritas
     
-    def crear_clave(self, nombre, clave, pista):
-        return None
-    
-    def generar_clave(self):
-        return None
-    
     def dar_elementos(self):
         self.elementos = session.query(Elemento).all()
         return self.elementos
@@ -36,6 +30,11 @@ class Logica(FachadaCajaDeSeguridad):
     def crear_clave(self, nombre, clave, pista):
         if nombre is None or clave is None or pista is None or clave != pista:
             return False
+        
+        nueva_clave = ClaveFavorita(nombre=nombre, clave=clave, pista=pista)
+        session.add(nueva_clave)
+        session.commit()
+        session.close()
         return True
 
     def es_clave_segura(selft, clave):
