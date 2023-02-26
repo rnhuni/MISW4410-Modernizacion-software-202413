@@ -46,3 +46,8 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.logica.crear_clave(nombre="Última clave", clave='S3gura', pista='S3gura')
     claves = self.logica.dar_claves_favoritas()
     self.assertEqual(claves[len(claves) -1]['nombre'], 'Última clave')
+  
+  def test_clavefavorita_08(self):
+    self.logica.crear_clave(nombre="Última clave repetida", clave='S3gura*', pista='S3gura*')
+    resultado = self.logica.crear_clave(nombre="Última clave repetida", clave='S3gura*', pista='S3gura*')    
+    self.assertEqual(resultado, False)
