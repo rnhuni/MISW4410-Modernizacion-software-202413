@@ -21,3 +21,7 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     claves = self.logica.dar_claves_favoritas()
 
     self.assertEquals(claves[0]['nombre'], "Clave de prueba")
+
+  def test_clavefavorita_03(self):
+    crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave=None, pista=None)
+    self.assertEquals(crear_respuesta, False)
