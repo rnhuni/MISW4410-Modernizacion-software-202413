@@ -35,3 +35,6 @@ class Logica(FachadaCajaDeSeguridad):
         if nombre is None or clave is None or pista is None or clave != pista:
             return False
         return True
+
+    def es_clave_segura(clave):
+        return None
