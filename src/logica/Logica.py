@@ -1,3 +1,4 @@
+import string
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento
@@ -36,5 +37,20 @@ class Logica(FachadaCajaDeSeguridad):
             return False
         return True
 
-    def es_clave_segura(clave):
-        return None
+    def es_clave_segura(selft, clave):
+        tiene_mayusculas = False
+        tiene_minusculas = False
+        tiene_cespeciales = False
+        sin_espacios = True
+
+        for c in clave:
+            if not tiene_mayusculas and c.isupper():
+                tiene_mayusculas = True
+            elif not tiene_minusculas and c.islower():
+                tiene_minusculas = True
+            elif not tiene_cespeciales and c in string.punctuation:
+                tiene_cespeciales = True
+            elif c.isspace():
+                sin_espacios = False
+        
+        return tiene_mayusculas and tiene_minusculas and tiene_cespeciales and sin_espacios
