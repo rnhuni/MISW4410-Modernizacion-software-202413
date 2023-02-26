@@ -36,3 +36,8 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
     respuesta = self.logica.es_clave_segura("Clav3S3gura*_")
     self.assertEqual(respuesta, True)
+  
+  def test_clavefavorita_06(self):
+    respuesta_generar = self.logica.generar_clave()
+    respuesta = self.logica.es_clave_segura(respuesta_generar)
+    self.assertEqual(respuesta, True)
