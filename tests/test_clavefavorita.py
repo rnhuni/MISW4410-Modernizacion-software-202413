@@ -43,11 +43,11 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.assertEqual(respuesta, True)
 
   def test_clavefavorita_07(self):
-    self.logica.crear_clave(nombre="Última clave", clave='S3gura', pista='S3gura')
+    self.logica.crear_clave(nombre="Ultima clave", clave='S3gura', pista='S3gura')
     claves = self.logica.dar_claves_favoritas()
-    self.assertEqual(claves[len(claves) -1]['nombre'], 'Última clave')
+    self.assertEqual(claves[len(claves) -1]['nombre'], 'Ultima clave')
   
   def test_clavefavorita_08(self):
-    self.logica.crear_clave(nombre="Última clave repetida", clave='S3gura*', pista='S3gura*')
-    resultado = self.logica.crear_clave(nombre="Última clave repetida", clave='S3gura*', pista='S3gura*')    
+    self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')
+    resultado = self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')    
     self.assertEqual(resultado, False)
