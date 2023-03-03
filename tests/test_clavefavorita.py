@@ -62,3 +62,11 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')
     resultado = self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')    
     self.assertEqual(resultado, False)
+
+  def test_valida_que_clave_exista_09(self):
+    nombre_aleatorio = self.data_factory.unique.name()
+    clave_aleatoria = self.data_factory.unique.text()
+    self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+
+    respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio)
+    self.assertIsNone(respuesta)
