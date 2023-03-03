@@ -70,3 +70,7 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
     respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio)
     self.assertIsNotNone(respuesta)
+  
+  def test_valida_campos_requeridos_editar_clave_10(self):
+    respuesta = self.logica.editar_clave(id=None, nombre=None, clave=None, pista=None)
+    self.assertEqual(respuesta, False)
