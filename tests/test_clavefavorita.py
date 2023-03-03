@@ -3,27 +3,33 @@ import unittest
 from src.logica.Logica import Logica
 from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.declarative_base import Session
+from faker import Faker
 
 class ClaveFavoritaTestCase(unittest.TestCase):
   def setUp(self):
     self.session = Session()
     self.logica = Logica()
+    self.data_factory = Faker()
+    Faker.seed(1000)
   
   def test_evaluar_clavesfavoritas_01(self):
     claves = self.logica.dar_claves_favoritas()
     self.assertIsNot(claves, None)
 
   def test_evaluar_recuperacion_clavefavorita_agregada_02(self):
-    nueva_clave = ClaveFavorita(nombre="Clave de prueba", clave="clave 0", pista="pista 0")
+    nombre_clave = self.data_factory.unique.name()
+    clave = self.data_factory.text()
+    nueva_clave = ClaveFavorita(nombre=nombre_clave, clave=clave, pista=clave)
     self.session.add(nueva_clave)
     self.session.commit()
     self.session.close()
     claves = self.logica.dar_claves_favoritas()
 
-    self.assertEqual(claves[0]['nombre'], "Clave de prueba")
+    self.assertEqual(claves[0]['nombre'], nombre_clave)
 
   def test_evaluar_declaracion_campos_clavefavorita_03(self):
-    crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave=None, pista=None)
+    nombre_clave = self.data_factory.unique.name()
+    crear_respuesta = self.logica.crear_clave(nombre=nombre_clave, clave=None, pista=None)
     self.assertEqual(crear_respuesta, False)
   
   def test_valida_pista_clave_iguales_04(self):
