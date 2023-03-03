@@ -6,6 +6,7 @@ from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento
 from src.modelo.declarative_base import engine, Base, session
+from sqlalchemy import exists
 from urllib.parse import urlparse
 
 class Logica(FachadaCajaDeSeguridad):        
@@ -99,5 +100,10 @@ class Logica(FachadaCajaDeSeguridad):
         
         if not self.es_url(url): 
             return False
+        
+        existe_clave = session.query(exists().where(ClaveFavorita.id == password)).scalar()
+        if not existe_clave: 
+            return False
+
         
         return True
