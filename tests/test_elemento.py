@@ -100,3 +100,16 @@ class ElementoTestCase(unittest.TestCase):
     elementos = self.logica.dar_elementos()
 
     self.assertEqual(len(elementos), 3)
+
+  def test_validar_nombre_crear_elemento_login_10(self):
+    self._insertar_clave()
+    nombre = self.data_factory.unique.name()
+    texto_normal = self.data_factory.text()
+    
+    self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    res = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, False)
+
+    nombre = self.data_factory.unique.name()
+    res = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, True)
