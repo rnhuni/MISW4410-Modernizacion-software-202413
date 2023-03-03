@@ -2,6 +2,7 @@ import unittest
 
 from src.logica.Logica import Logica
 from src.modelo.elemento import Elemento
+from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.declarative_base import Session
 from faker import Faker
 
@@ -11,6 +12,13 @@ class ElementoTestCase(unittest.TestCase):
     self.logica = Logica()
     self.data_factory = Faker()
     Faker.seed(1000)
+
+  def _insertar_clave(self):
+    clave = self.data_factory.unique.text()
+    nueva_clave = ClaveFavorita(nombre=self.data_factory.unique.name(), clave=clave, pista=clave)
+    self.session.add(nueva_clave)
+    self.session.commit()
+    self.session.close()
   
   def test_evaluar_elementos_01(self):
     elemento = self.logica.dar_elementos()
@@ -31,6 +39,7 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(res, False)
 
   def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
+    self._insertar_clave()
     texto_largo = self.data_factory.sentence(300)
 
     res = self.logica.crear_login(nombre=texto_largo, email=self.data_factory.unique.email(), usuario=texto_largo, password=1, url=self.data_factory.unique.url(), notas=texto_largo)
@@ -41,6 +50,7 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(res, True)
 
   def test_validar_longitud_notas_crear_elemento_login_05(self):
+    self._insertar_clave()
     texto_normal = self.data_factory.text()
     texto_muy_largo = self.data_factory.sentence(600)
 
@@ -51,6 +61,7 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(res, True)
 
   def test_validar_email_crear_elemento_login_06(self):
+    self._insertar_clave()
     texto_normal = self.data_factory.text()
     
     res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
@@ -59,7 +70,8 @@ class ElementoTestCase(unittest.TestCase):
     res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
     self.assertEqual(res, True)
 
-  def test_validar_url_crear_elemento_login_06(self):
+  def test_validar_url_crear_elemento_login_07(self):
+    self._insertar_clave()
     texto_normal = self.data_factory.text()
     
     res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
