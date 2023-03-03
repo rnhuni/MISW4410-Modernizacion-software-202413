@@ -25,4 +25,21 @@ class ReporteTestCase(unittest.TestCase):
 
     self.assertEqual(self.logica.contar_claves_inseguras(claves), 3)
 
-  
+  def test_evaluar_calcularmasdeuna_02(self):
+    elementos = []
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+
+    self.assertEqual(self.logica.calcular_masdeuna(elementos), 4)
