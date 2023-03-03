@@ -6,6 +6,7 @@ from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento
 from src.modelo.declarative_base import engine, Base, session
+from urllib.parse import urlparse
 
 class Logica(FachadaCajaDeSeguridad):        
 
@@ -79,6 +80,10 @@ class Logica(FachadaCajaDeSeguridad):
         pattern = r"[^@]+@[^@]+\.[^@]+"
         return bool(re.match(pattern, email))
     
+    def es_url(self, url):
+        parsed_url = urlparse(url)
+        return parsed_url.scheme and parsed_url.netloc
+    
     def crear_login(self, nombre, email, usuario, password, url, notas):
         if nombre is None or email is None or usuario is None or password is None or url is None or notas is None:
             return False
@@ -90,6 +95,9 @@ class Logica(FachadaCajaDeSeguridad):
             return False
         
         if not self.es_email(email): 
+            return False
+        
+        if not self.es_url(url): 
             return False
         
         return True
