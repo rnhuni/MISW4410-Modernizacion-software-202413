@@ -81,4 +81,7 @@ class Logica(FachadaCajaDeSeguridad):
         if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
             return False
         
+        if len(notas) > 512:
+            return False
+        
         return True
