@@ -69,4 +69,4 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
 
     respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio)
-    self.assertIsNone(respuesta)
+    self.assertIsNotNone(respuesta)
