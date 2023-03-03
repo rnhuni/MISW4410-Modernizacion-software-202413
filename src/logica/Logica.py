@@ -1,4 +1,5 @@
 import random
+import re
 import string
 import sys
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
@@ -73,7 +74,11 @@ class Logica(FachadaCajaDeSeguridad):
             
             if self.es_clave_segura(clave_candidata):
                 return clave_candidata
-            
+    
+    def es_email(self, email):
+        pattern = r"[^@]+@[^@]+\.[^@]+"
+        return bool(re.match(pattern, email))
+    
     def crear_login(self, nombre, email, usuario, password, url, notas):
         if nombre is None or email is None or usuario is None or password is None or url is None or notas is None:
             return False
@@ -82,6 +87,9 @@ class Logica(FachadaCajaDeSeguridad):
             return False
         
         if len(notas) > 512:
+            return False
+        
+        if not self.es_email(email): 
             return False
         
         return True
