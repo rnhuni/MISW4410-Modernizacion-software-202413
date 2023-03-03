@@ -105,6 +105,10 @@ class Logica(FachadaCajaDeSeguridad):
         if not existe_clave: 
             return False
         
+        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
+        if existe_nombre: 
+            return False
+        
         nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
