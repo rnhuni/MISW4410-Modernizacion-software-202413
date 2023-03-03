@@ -73,3 +73,9 @@ class Logica(FachadaCajaDeSeguridad):
             
             if self.es_clave_segura(clave_candidata):
                 return clave_candidata
+            
+    def crear_login(self, nombre, email, usuario, password, url, notas):
+        if nombre is None or email is None or usuario is None or url is None or notas is None:
+            return False
+        
+        return True
