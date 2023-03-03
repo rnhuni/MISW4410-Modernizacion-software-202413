@@ -75,7 +75,10 @@ class Logica(FachadaCajaDeSeguridad):
                 return clave_candidata
             
     def crear_login(self, nombre, email, usuario, password, url, notas):
-        if nombre is None or email is None or usuario is None or url is None or notas is None:
+        if nombre is None or email is None or usuario is None or password is None or url is None or notas is None:
+            return False
+        
+        if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
             return False
         
         return True
