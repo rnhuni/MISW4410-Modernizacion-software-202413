@@ -43,3 +43,36 @@ class ReporteTestCase(unittest.TestCase):
     elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
 
     self.assertEqual(self.logica.calcular_masdeuna(elementos), 4)
+
+  def test_evaluar_calcularr_03(self):
+    elementos = []
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+
+    r1 = self.logica.calcular_r(elementos)
+
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+
+    r05_1 = self.logica.calcular_r(elementos)
+
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+
+    r05_2 = self.logica.calcular_r(elementos)
+
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    clave_favorita_id = self.data_factory.random_int(1, 10000)
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+    elementos.append(Elemento(clave_favorita_id=clave_favorita_id))
+
+    r0 = self.logica.calcular_r(elementos)
+
+    self.assertEqual(r1, 1.0)
+    self.assertEqual(r05_1, 0.5)
+    self.assertEqual(r05_2, 0.5)
+    self.assertEqual(r0, 0.0)
