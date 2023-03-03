@@ -4,7 +4,7 @@ import string
 import sys
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
-from src.modelo.elemento import Elemento
+from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
 from urllib.parse import urlparse
@@ -104,6 +104,10 @@ class Logica(FachadaCajaDeSeguridad):
         existe_clave = session.query(exists().where(ClaveFavorita.id == password)).scalar()
         if not existe_clave: 
             return False
-
         
+        nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
+        session.add(nuevo_login)
+        session.commit()
+        session.close()
+
         return True
