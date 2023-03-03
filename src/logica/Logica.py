@@ -152,5 +152,19 @@ class Logica(FachadaCajaDeSeguridad):
                     cantidad += 1
             else:
                 usadas[id] = 1
-                
+
         return cantidad
+
+    def calcular_r(self, elementos):
+        usadas = {}
+        r = 1.0
+        for elemento in elementos:
+            id = elemento.clave_favorita_id
+            if id in usadas:
+                usadas[id] += 1
+                if usadas[id] > 3:
+                    return 0.0
+                r = 0.5
+            else:
+                usadas[id] = 1
+        return r
