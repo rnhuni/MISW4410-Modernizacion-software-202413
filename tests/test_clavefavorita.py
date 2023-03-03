@@ -26,23 +26,23 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave=None, pista=None)
     self.assertEqual(crear_respuesta, False)
   
-  def test_clavefavorita_04(self):
+  def test_valida_pista_clave_iguales_04(self):
     crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave="clave", pista="prueba")
     self.assertEqual(crear_respuesta, False)
 
-  def test_clavefavorita_05(self):
+  def test_valida_clave_si_es_segura_05(self):
     respuesta = self.logica.es_clave_segura("clave123")
     self.assertEqual(respuesta, False)
 
     respuesta = self.logica.es_clave_segura("Clav3S3gura*_")
     self.assertEqual(respuesta, True)
   
-  def test_clavefavorita_06(self):
+  def test_valida_clave_generada_si_es_segura_06(self):
     respuesta_generar = self.logica.generar_clave()
     respuesta = self.logica.es_clave_segura(respuesta_generar)
     self.assertEqual(respuesta, True)
 
-  def test_clavefavorita_07(self):
+  def test_valida_guardar_clave_y_se_visualiza_en_dar_claves_favoritas_07(self):
     self.logica.crear_clave(nombre="Ultima clave", clave='S3gura', pista='S3gura')
     claves = self.logica.dar_claves_favoritas()
     exists = False
@@ -52,7 +52,7 @@ class ClaveFavoritaTestCase(unittest.TestCase):
         break
     self.assertEqual(exists, True)
   
-  def test_clavefavorita_08(self):
+  def test_valida_clave_no_este_almacenada_con_mismo_nombre_08(self):
     self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')
     resultado = self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')    
     self.assertEqual(resultado, False)
