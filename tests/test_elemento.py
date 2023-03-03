@@ -31,8 +31,15 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(res, False)
 
   def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
-    texto_largo = self.data_factory.text(max_nb_chars=300)
+    texto_largo = self.data_factory.sentence(300)
 
-    res = self.logica.crear_login(nombre=texto_largo, email=texto_largo, usuario=texto_largo, password=None, url=texto_largo, notas=texto_largo)
+    res = self.logica.crear_login(nombre=texto_largo, email=texto_largo, usuario=texto_largo, password=1, url=texto_largo, notas=texto_largo)
+    self.assertEqual(res, False)
+
+  def test_validar_longitud_notas_crear_elemento_login_04(self):
+    texto_normal = self.data_factory.text()
+    texto_muy_largo = self.data_factory.sentence(600)
+
+    res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=texto_normal, notas=texto_muy_largo)
     self.assertEqual(res, False)
                 
