@@ -126,3 +126,9 @@ class Logica(FachadaCajaDeSeguridad):
             i = i+1
 
         return None
+
+    def editar_clave(self, id,  nombre, clave, pista):
+        if id is None or nombre is None or clave is None or pista is None:
+            return False
+                
+        return True
