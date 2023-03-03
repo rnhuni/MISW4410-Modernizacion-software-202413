@@ -1,5 +1,6 @@
 import random
 import string
+import sys
 from src.logica.FachadaCajaDeSeguridad import FachadaCajaDeSeguridad
 from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento
@@ -8,6 +9,8 @@ from src.modelo.declarative_base import engine, Base, session
 class Logica(FachadaCajaDeSeguridad):        
 
     def __init__(self):
+        if 'unittest' in sys.modules.keys():
+            Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
 
         self.clave_maestra = 'clave'
