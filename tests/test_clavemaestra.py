@@ -6,7 +6,7 @@ class ClaveMaestraTestCase(unittest.TestCase):
   def setUp(self):
     self.logica = Logica()
   
-  def test_clavemaestra_01(self):
+  def test_eveluar_clavemaestra_01(self):
     claveMaestra = self.logica.dar_claveMaestra()
     self.assertIsInstance(claveMaestra, str)
                 

@@ -9,11 +9,11 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.session = Session()
     self.logica = Logica()
   
-  def test_clavefavorita_01(self):
+  def test_evaluar_clavesfavoritas_01(self):
     claves = self.logica.dar_claves_favoritas()
     self.assertIsNot(claves, None)
 
-  def test_clavefavorita_02(self):
+  def test_evaluar_recuperacion_clavefavorita_agregada_02(self):
     nueva_clave = ClaveFavorita(nombre="Clave de prueba", clave="clave 0", pista="pista 0")
     self.session.add(nueva_clave)
     self.session.commit()
@@ -22,7 +22,7 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
     self.assertEqual(claves[0]['nombre'], "Clave de prueba")
 
-  def test_clavefavorita_03(self):
+  def test_evaluar_declaracion_campos_clavefavorita_03(self):
     crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave=None, pista=None)
     self.assertEqual(crear_respuesta, False)
   

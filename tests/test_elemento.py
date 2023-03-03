@@ -9,11 +9,11 @@ class ElementoTestCase(unittest.TestCase):
     self.session = Session()
     self.logica = Logica()
   
-  def test_elemento_01(self):
+  def test_evaluar_elementos_01(self):
     elemento = self.logica.dar_elementos()
     self.assertIsNotNone(elemento)
 
-  def test_elemento_02(self):
+  def test_evaluar_recuperacion_elemento_agregado_02(self):
     nuevo_elemento = Elemento(nombreElemento="Elemento de prueba", notas="Nota 0")
     self.session.add(nuevo_elemento)
     self.session.commit()
