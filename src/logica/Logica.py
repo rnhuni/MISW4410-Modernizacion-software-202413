@@ -138,5 +138,19 @@ class Logica(FachadaCajaDeSeguridad):
         for clave in clavesFavoritas:
             if self.es_clave_segura(clave.clave):
                 cantidad += 1
+
+        return cantidad
+    
+    def calcular_masdeuna(self, elementos):
+        cantidad = 0
+        usadas = {}
+        for elemento in elementos:
+            id = elemento.clave_favorita_id
+            if id in usadas:
+                usadas[id] += 1
+                if usadas[id] == 2:
+                    cantidad += 1
+            else:
+                usadas[id] = 1
                 
         return cantidad
