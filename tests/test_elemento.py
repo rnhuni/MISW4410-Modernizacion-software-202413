@@ -89,4 +89,14 @@ class ElementoTestCase(unittest.TestCase):
 
     res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
     self.assertEqual(res, True)
-                
+
+  def test_crear_dar_eleemntos_password_crear_elemento_login_09(self):
+    self._insertar_clave()
+    texto_normal = self.data_factory.text()
+    
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=0, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=0, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=0, url=self.data_factory.unique.url(), notas=texto_normal)
+    elementos = self.logica.dar_elementos()
+
+    self.assertEqual(len(elementos), 3)
