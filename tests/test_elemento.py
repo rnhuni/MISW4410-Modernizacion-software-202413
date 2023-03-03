@@ -42,4 +42,10 @@ class ElementoTestCase(unittest.TestCase):
 
     res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=texto_normal, notas=texto_muy_largo)
     self.assertEqual(res, False)
+
+  def test_validar_email_crear_elemento_login_04(self):
+    texto_normal = self.data_factory.text()
+    
+    res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
+    self.assertEqual(res, False)
                 
