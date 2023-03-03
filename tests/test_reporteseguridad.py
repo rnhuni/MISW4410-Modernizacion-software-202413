@@ -76,3 +76,11 @@ class ReporteTestCase(unittest.TestCase):
     self.assertEqual(r05_1, 0.5)
     self.assertEqual(r05_2, 0.5)
     self.assertEqual(r0, 0.0)
+
+  def test_calculo_nivel_seguridad_04(self):
+    nivel_1 = self.logica.calcular_nivel_seguridad(10, 5, 20, 0, 1)
+    nivel_2 = self.logica.calcular_nivel_seguridad(20, 7, 8, 0, 0.5)
+    nivel_3 = self.logica.calcular_nivel_seguridad(12, 3, 6, 0, 0)
+    self.assertEqual(nivel_1, 2.1)
+    self.assertEqual(nivel_2, 3.378)
+    self.assertEqual(nivel_3, 1.6520000000000001)
