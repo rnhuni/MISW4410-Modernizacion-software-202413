@@ -25,4 +25,8 @@ class ElementoTestCase(unittest.TestCase):
     elementos = self.logica.dar_elementos()
 
     self.assertEquals(elementos[0]['nombreElemento'], nombre_elemento)
+
+  def test_validar_campos_requeridos_crear_elemento_login_03(self):
+    res = self.logica.crear_login(nombre=None, email=None, usuario=None, password=None, url=None, notas=None)
+    self.assertEqual(res, False)
                 
