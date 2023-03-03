@@ -115,3 +115,14 @@ class Logica(FachadaCajaDeSeguridad):
         session.close()
 
         return True
+    
+    def dar_clave(self, nombre_clave):
+        self.claves_favoritas = session.query(ClaveFavorita).all()
+
+        i = 0
+        while i < len(self.claves_favoritas):
+            if self.claves_favoritas[i]['nombre'] == nombre_clave:
+                return self.claves_favoritas[i]['id']
+            i = i+1
+
+        return None

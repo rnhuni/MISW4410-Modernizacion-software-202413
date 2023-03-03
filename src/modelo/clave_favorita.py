@@ -15,6 +15,8 @@ class ClaveFavorita(Base):
     pista = Column(String)
 
     def __getitem__(self, indice):
+        if indice == 'id':
+            return self.id
         if indice == 'nombre':
             return self.nombre
         if indice == 'clave':
