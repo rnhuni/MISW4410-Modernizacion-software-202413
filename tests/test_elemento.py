@@ -29,4 +29,10 @@ class ElementoTestCase(unittest.TestCase):
   def test_validar_campos_requeridos_crear_elemento_login_03(self):
     res = self.logica.crear_login(nombre=None, email=None, usuario=None, password=None, url=None, notas=None)
     self.assertEqual(res, False)
+
+  def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
+    texto_largo = self.data_factory.text(max_nb_chars=300)
+
+    res = self.logica.crear_login(nombre=texto_largo, email=texto_largo, usuario=texto_largo, password=None, url=texto_largo, notas=texto_largo)
+    self.assertEqual(res, False)
                 
