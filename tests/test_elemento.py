@@ -33,19 +33,29 @@ class ElementoTestCase(unittest.TestCase):
   def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
     texto_largo = self.data_factory.sentence(300)
 
-    res = self.logica.crear_login(nombre=texto_largo, email=texto_largo, usuario=texto_largo, password=1, url=texto_largo, notas=texto_largo)
+    res = self.logica.crear_login(nombre=texto_largo, email=self.data_factory.unique.email(), usuario=texto_largo, password=1, url=texto_largo, notas=texto_largo)
     self.assertEqual(res, False)
+
+    texto_normal = self.data_factory.text()
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
+    self.assertEqual(res, True)
 
   def test_validar_longitud_notas_crear_elemento_login_04(self):
     texto_normal = self.data_factory.text()
     texto_muy_largo = self.data_factory.sentence(600)
 
-    res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=texto_normal, notas=texto_muy_largo)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_muy_largo)
     self.assertEqual(res, False)
+
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
+    self.assertEqual(res, True)
 
   def test_validar_email_crear_elemento_login_04(self):
     texto_normal = self.data_factory.text()
     
     res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
     self.assertEqual(res, False)
+
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
+    self.assertEqual(res, True)
                 
