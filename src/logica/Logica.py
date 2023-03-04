@@ -138,4 +138,13 @@ class Logica(FachadaCajaDeSeguridad):
             if id != consulta_clave.id:
                 return False
             
+        clave_existente = session.get(ClaveFavorita, id)
+        clave_existente.nombre = nombre
+        clave_existente.clave = clave
+        clave_existente.pista = pista
+       
+        session.add(clave_existente)
+        session.commit()
+        session.close()
+
         return True
