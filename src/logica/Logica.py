@@ -168,3 +168,10 @@ class Logica(FachadaCajaDeSeguridad):
             else:
                 usadas[id] = 1
         return r
+    
+    def calcular_nivel_seguridad(self, cantidad_claves, inseguras, cantidad_elementos, avencer, R):
+        SC = (cantidad_claves - inseguras) * cantidad_claves / 100
+        V = (cantidad_elementos - avencer) * cantidad_elementos / 100
+        R = R
+
+        return SC + 0.5 + V * 0.2 + R * 0.3
