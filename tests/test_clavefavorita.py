@@ -33,7 +33,10 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.assertEqual(crear_respuesta, False)
   
   def test_valida_pista_clave_iguales_04(self):
-    crear_respuesta = self.logica.crear_clave(nombre="Clave de prueba", clave="clave", pista="prueba")
+    nombre_aleatorio = self.data_factory.unique.name()
+    clave_aleatoria = self.data_factory.unique.text()
+    clave_aleatoria_dos = self.data_factory.unique.text()
+    crear_respuesta = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria_dos)
     self.assertEqual(crear_respuesta, False)
 
   def test_valida_clave_si_es_segura_05(self):
@@ -49,18 +52,24 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.assertEqual(respuesta, True)
 
   def test_valida_guardar_clave_y_se_visualiza_en_dar_claves_favoritas_07(self):
-    self.logica.crear_clave(nombre="Ultima clave", clave='S3gura', pista='S3gura')
+    nombre_aleatorio = self.data_factory.unique.name()
+    clave_aleatoria = self.data_factory.unique.text()
+    self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+
     claves = self.logica.dar_claves_favoritas()
     exists = False
     for clave in claves:
-      if clave["nombre"] == "Ultima clave":
+      if clave["nombre"] == nombre_aleatorio:
         exists = True
         break
+
     self.assertEqual(exists, True)
   
   def test_valida_clave_no_este_almacenada_con_mismo_nombre_08(self):
-    self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')
-    resultado = self.logica.crear_clave(nombre="Ultima clave repetida", clave='S3gura*', pista='S3gura*')    
+    nombre_aleatorio = self.data_factory.unique.name()
+    clave_aleatoria = self.data_factory.unique.text()
+    self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+    resultado = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)    
     self.assertEqual(resultado, False)
 
   def test_valida_que_clave_exista_09(self):
