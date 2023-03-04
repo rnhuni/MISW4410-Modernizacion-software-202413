@@ -74,3 +74,16 @@ class ClaveFavoritaTestCase(unittest.TestCase):
   def test_valida_campos_requeridos_editar_clave_10(self):
     respuesta = self.logica.editar_clave(id=None, nombre=None, clave=None, pista=None)
     self.assertEqual(respuesta, False)
+  
+  def test_valida_nombre_duplicado_editar_clave_11(self):
+    nombre_aleatorio = self.data_factory.unique.name()
+    nombre_aleatorio_dos = nombre_aleatorio + ' 2';
+    clave_aleatoria = self.data_factory.unique.text()
+    clave_aleatoria_dos = self.data_factory.unique.text()
+    self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+    self.logica.crear_clave(nombre=nombre_aleatorio_dos, clave=clave_aleatoria_dos, pista=clave_aleatoria_dos)
+
+    id_clave = self.logica.dar_clave(nombre_clave=nombre_aleatorio_dos)
+    respuesta = self.logica.editar_clave(id=id_clave, nombre=nombre_aleatorio, clave=clave_aleatoria_dos, pista=clave_aleatoria_dos)
+    
+    self.assertEqual(respuesta, False)
