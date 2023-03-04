@@ -175,3 +175,46 @@ class Logica(FachadaCajaDeSeguridad):
         R = R
 
         return SC + 0.5 + V * 0.2 + R * 0.3
+    
+    def calcular_avencer(self, elementos): #TODO: pendiente de implementar cuando agregemos las inserciones para todos los tipos de elementos
+        return 0
+    
+    def dar_reporte_seguridad(self):
+        cantidad_claves = len(self.claves)
+        inseguras = self.contar_claves_inseguras(self.claves)
+
+        cantidad_elementos = len(self.elementos)
+        avencer = self.calcular_avencer(self.elementos)
+
+        masdeuna = self.calcular_masdeuna(self.elementos)
+
+        R = self.calcular_r(self.elementos)
+
+        nivel = self.calcular_nivel_seguridad(cantidad_claves, inseguras, cantidad_elementos, avencer, R)
+
+        #Contar por tipos
+        login = 0
+        ids = 0
+        tarjetas = 0
+        secretos = 0
+        for elemento in self.elementos:
+            if elemento.tipo == TipoElemento.LOGIN:
+                login += 1
+            if elemento.tipo == TipoElemento.IDENTIFICACION:
+                ids += 1
+            if elemento.tipo == TipoElemento.TARJETA:
+                tarjetas += 1
+            if elemento.tipo == TipoElemento.SECRETO:
+                secretos += 1
+        datos_reporte ={}
+            
+        datos_reporte['logins'] = login
+        datos_reporte['ids'] = ids
+        datos_reporte['tarjetas'] = tarjetas
+        datos_reporte['secretos'] = secretos
+        datos_reporte['inseguras'] =inseguras
+        datos_reporte['avencer'] = avencer
+        datos_reporte['masdeuna'] = masdeuna
+        datos_reporte['nivel'] = nivel
+
+        return datos_reporte
