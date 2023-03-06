@@ -130,7 +130,23 @@ class Logica(FachadaCajaDeSeguridad):
     def editar_clave(self, id,  nombre, clave, pista):
         if id is None or nombre is None or clave is None or pista is None:
             return False
-                
+        
+        existe_nombre = session.query(exists().where(ClaveFavorita.nombre == nombre)).scalar()
+
+        if existe_nombre:
+            consulta_clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).scalar()
+            if id != consulta_clave.id:
+                return False
+            
+        clave_existente = session.get(ClaveFavorita, id)
+        clave_existente.nombre = nombre
+        clave_existente.clave = clave
+        clave_existente.pista = pista
+       
+        session.add(clave_existente)
+        session.commit()
+        session.close()
+
         return True
     
     def contar_claves_inseguras(self, clavesFavoritas):
