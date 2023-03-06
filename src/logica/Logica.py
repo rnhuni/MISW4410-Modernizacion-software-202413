@@ -34,8 +34,9 @@ class Logica(FachadaCajaDeSeguridad):
         return self.elementos
     
     def crear_clave(self, nombre, clave, pista):
-        if nombre is None or clave is None or pista is None or clave != pista:
-            return False
+        error = self.validar_crear_editar_clave(nombre, clave, pista)
+        if len(error) > 0:
+            return error
         
         clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if clave_existente is not None:
@@ -234,3 +235,19 @@ class Logica(FachadaCajaDeSeguridad):
         datos_reporte['nivel'] = nivel
 
         return datos_reporte
+    
+    def validar_crear_editar_clave(self, nombre, clave, pista):
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
+        
+        if clave is None  or len(clave) == 0:
+            return "El campo clave no puede estar vacío"
+        
+        if pista is None or len(pista) == 0:
+            return "El campo pista no puede estar vacío"
+        
+        clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
+        if clave_existente is not None:
+            return "Ya existe una clave con ese nombre"
+        
+        return ""
