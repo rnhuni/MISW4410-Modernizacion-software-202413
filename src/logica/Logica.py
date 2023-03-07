@@ -43,6 +43,10 @@ class Logica(FachadaCajaDeSeguridad):
         
         clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if clave_existente is not None:
+            return "Ya existe una clave con ese nombre"
+        
+        clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
+        if clave_existente is not None:
             return False
         
         nueva_clave = ClaveFavorita(nombre=nombre, clave=clave, pista=pista)
@@ -163,6 +167,7 @@ class Logica(FachadaCajaDeSeguridad):
         existe_nombre = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if existe_nombre:
             if existe_nombre.id != clave_existente.id:
+                print("Error: {}-{}".format(existe_nombre.id, clave_existente.id))
                 return "Ya existe una clave con ese nombre"
             
         clave_existente.nombre = nombre
@@ -272,9 +277,5 @@ class Logica(FachadaCajaDeSeguridad):
         
         if pista is None or len(pista) == 0:
             return "El campo pista no puede estar vacío"
-        
-        clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
-        if clave_existente is not None:
-            return "Ya existe una clave con ese nombre"
         
         return ""
