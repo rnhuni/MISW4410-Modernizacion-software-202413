@@ -46,7 +46,7 @@ class Logica(FachadaCajaDeSeguridad):
         session.add(nueva_clave)
         session.commit()
         session.close()
-        return True
+        return ""
 
     def es_clave_segura(selft, clave):
         tiene_mayusculas = False
