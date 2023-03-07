@@ -167,7 +167,6 @@ class Logica(FachadaCajaDeSeguridad):
         existe_nombre = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if existe_nombre:
             if existe_nombre.id != clave_existente.id:
-                print("Error: {}-{}".format(existe_nombre.id, clave_existente.id))
                 return "Ya existe una clave con ese nombre"
             
         clave_existente.nombre = nombre
