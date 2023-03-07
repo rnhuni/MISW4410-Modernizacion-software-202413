@@ -32,71 +32,71 @@ class ElementoTestCase(unittest.TestCase):
     self.session.close()
     elementos = self.logica.dar_elementos()
 
-    self.assertEquals(elementos[0]['nombreElemento'], nombre_elemento)
+    self.assertEquals(elementos[0]['nombre_elemento'], nombre_elemento)
 
   def test_validar_campos_requeridos_crear_elemento_login_03(self):
     res = self.logica.crear_login(nombre=None, email=None, usuario=None, password=None, url=None, notas=None)
-    self.assertEqual(res, False)
+    self.assertNotEqual(res, "")
 
   def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
     self._insertar_clave()
     texto_largo = self.data_factory.sentence(300)
 
-    res = self.logica.crear_login(nombre=texto_largo, email=self.data_factory.unique.email(), usuario=texto_largo, password=1, url=self.data_factory.unique.url(), notas=texto_largo)
-    self.assertEqual(res, False)
+    res = self.logica.crear_login(nombre=texto_largo, email=self.data_factory.unique.email(), usuario=texto_largo, password="1", url=self.data_factory.unique.url(), notas=texto_largo)
+    self.assertNotEqual(res, "")
 
     texto_normal = self.data_factory.text()
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, True)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, "")
 
   def test_validar_longitud_notas_crear_elemento_login_05(self):
     self._insertar_clave()
     texto_normal = self.data_factory.text()
     texto_muy_largo = self.data_factory.sentence(600)
 
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_muy_largo)
-    self.assertEqual(res, False)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_muy_largo)
+    self.assertNotEqual(res, "")
 
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, True)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, "")
 
   def test_validar_email_crear_elemento_login_06(self):
     self._insertar_clave()
     texto_normal = self.data_factory.text()
     
-    res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, False)
+    res = self.logica.crear_login(nombre=texto_normal, email=texto_normal, usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertNotEqual(res, "")
 
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, True)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, "")
 
   def test_validar_url_crear_elemento_login_07(self):
     self._insertar_clave()
     texto_normal = self.data_factory.text()
     
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=texto_normal, notas=texto_normal)
-    self.assertEqual(res, False)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=texto_normal, notas=texto_normal)
+    self.assertNotEqual(res, "")
 
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, True)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, "")
 
   def test_validar_password_crear_elemento_login_08(self):
     self._insertar_clave()
     texto_normal = self.data_factory.text()
     
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=0, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, False)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertNotEqual(res, "")
 
-    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.assertEqual(res, True)
+    res = self.logica.crear_login(nombre=texto_normal, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(res, "")
 
   def test_validar_crear_dar_elementos_elemento_login_09(self):
     self._insertar_clave()
     texto_normal = self.data_factory.text()
     
-    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
     elementos = self.logica.dar_elementos()
 
     self.assertEqual(len(elementos), 3)
@@ -106,12 +106,12 @@ class ElementoTestCase(unittest.TestCase):
     texto_normal = self.data_factory.text()
     
     nombre = self.data_factory.unique.name()
-    res0 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
-    res1 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    res0 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
+    res1 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
     
     nombre = self.data_factory.unique.name()
-    res2 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password=1, url=self.data_factory.unique.url(), notas=texto_normal)
+    res2 = self.logica.crear_login(nombre=nombre, email=self.data_factory.unique.email(), usuario=texto_normal, password="1", url=self.data_factory.unique.url(), notas=texto_normal)
 
-    self.assertEqual(res0, True)
-    self.assertEqual(res1, False)
-    self.assertEqual(res2, True)
+    self.assertEqual(res0, "")
+    self.assertNotEqual(res1, "")
+    self.assertEqual(res2, "")
