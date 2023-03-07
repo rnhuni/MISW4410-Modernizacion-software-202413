@@ -18,9 +18,9 @@ class Logica(FachadaCajaDeSeguridad):
 
         self.clave_maestra = 'clave'
 
-        self.claves_favoritas = []
+        self.claves_favoritas = self.dar_claves_favoritas()
 
-        self.elementos = []
+        self.elementos = self.dar_elementos()
 
     def dar_claveMaestra(self):
         return self.clave_maestra
@@ -32,6 +32,9 @@ class Logica(FachadaCajaDeSeguridad):
     def dar_elementos(self):
         self.elementos = session.query(Elemento).all()
         return self.elementos
+    
+    def dar_elemento(self, nombre):
+        return session.query(Elemento).filter(Elemento.nombre == nombre).first()
     
     def crear_clave(self, nombre, clave, pista):
         error = self.validar_crear_editar_clave(nombre, clave, pista)
@@ -147,17 +150,21 @@ class Logica(FachadaCajaDeSeguridad):
         return None
 
     def editar_clave(self, id,  nombre, clave, pista):
-        if id is None or nombre is None or clave is None or pista is None:
-            return False
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
         
-        existe_nombre = session.query(exists().where(ClaveFavorita.nombre == nombre)).scalar()
-
+        if clave is None  or len(clave) == 0:
+            return "El campo clave no puede estar vacío"
+        
+        if pista is None or len(pista) == 0:
+            return "El campo pista no puede estar vacío"
+        
+        clave_existente = self.claves_favoritas[id]
+        existe_nombre = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if existe_nombre:
-            consulta_clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).scalar()
-            if id != consulta_clave.id:
-                return False
+            if existe_nombre.id != clave_existente.id:
+                return "Ya existe una clave con ese nombre"
             
-        clave_existente = session.get(ClaveFavorita, id)
         clave_existente.nombre = nombre
         clave_existente.clave = clave
         clave_existente.pista = pista
@@ -166,7 +173,7 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
         session.close()
 
-        return True
+        return ""
     
     def contar_claves_inseguras(self, clavesFavoritas):
         cantidad = 0
