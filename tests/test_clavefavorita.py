@@ -30,14 +30,14 @@ class ClaveFavoritaTestCase(unittest.TestCase):
   def test_evaluar_declaracion_campos_clavefavorita_03(self):
     nombre_clave = self.data_factory.unique.name()
     crear_respuesta = self.logica.crear_clave(nombre=nombre_clave, clave=None, pista=None)
-    self.assertEqual(crear_respuesta, False)
+    self.assertNotEqual(crear_respuesta, '')
   
   def test_valida_pista_clave_iguales_04(self):
     nombre_aleatorio = self.data_factory.unique.name()
     clave_aleatoria = self.data_factory.unique.text()
     clave_aleatoria_dos = self.data_factory.unique.text()
     crear_respuesta = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria_dos)
-    self.assertEqual(crear_respuesta, False)
+    self.assertEqual(crear_respuesta, '')
 
   def test_valida_clave_si_es_segura_05(self):
     respuesta = self.logica.es_clave_segura("clave123")
@@ -70,7 +70,7 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     clave_aleatoria = self.data_factory.unique.text()
     self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
     resultado = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)    
-    self.assertEqual(resultado, False)
+    self.assertNotEqual(resultado, '')
 
   def test_valida_que_clave_exista_09(self):
     nombre_aleatorio = self.data_factory.unique.name()
