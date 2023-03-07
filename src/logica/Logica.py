@@ -87,35 +87,53 @@ class Logica(FachadaCajaDeSeguridad):
         return parsed_url.scheme and parsed_url.netloc
     
     def crear_login(self, nombre, email, usuario, password, url, notas):
-        if nombre is None or email is None or usuario is None or password is None or url is None or notas is None:
-            return False
-        
-        if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
-            return False
-        
-        if len(notas) > 512:
-            return False
-        
-        if not self.es_email(email): 
-            return False
-        
-        if not self.es_url(url): 
-            return False
-        
-        existe_clave = session.query(exists().where(ClaveFavorita.id == password)).scalar()
-        if not existe_clave: 
-            return False
-        
-        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
-        if existe_nombre: 
-            return False
+        err = self.validar_crear_editar_login(0, nombre, email, usuario, password, url, notas)
+        if len(err) > 0:
+            return err
         
         nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
         session.close()
 
-        return True
+        return ""
+    
+    def validar_crear_editar_login(self, id, nombre, email, usuario, password, url, notas):
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
+        
+        if email is None or len(email) == 0:
+            return "El campo email no puede estar vacío"
+        
+        if usuario is None or len(usuario) == 0:
+            return "El campo usuario no puede estar vacío"
+        
+        if url is None or len(url) == 0:
+            return "El campo url no puede estar vacío"
+        
+        if notas is None or len(notas) == 0:
+            return "El campo notas no puede estar vacío"
+            
+        if password is None or len(password) == 0:
+            return "El campo password no puede estar vacío"
+        
+        if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
+            return "Los campos no puede tener más de 255 caracteres"
+        
+        if len(notas) > 512:
+            return "El campo notas no puede tenes más de 512 caracteres"
+        
+        if not self.es_email(email): 
+            return "El campo email es inválido"
+        
+        if not self.es_url(url): 
+            return "El campo url es inválido"
+        
+        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
+        if existe_nombre: 
+            return "Ya existe un elemento con ese nombre"
+        
+        return ""
     
     def dar_clave(self, nombre_clave):
         self.claves_favoritas = session.query(ClaveFavorita).all()

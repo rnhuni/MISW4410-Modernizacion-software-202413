@@ -40,6 +40,14 @@ class Elemento(Base):
         if indice == 'nombreElemento':
             return self.nombreElemento
         if indice == 'tipo':
+            if self.tipo == TipoElemento.LOGIN:
+                return "Login"
+            if self.tipo == TipoElemento.IDENTIFICACION:
+                return "Ids"
+            if self.tipo == TipoElemento.TARJETA:
+                return "Tarjeta"
+            if self.tipo == TipoElemento.SECRETO:
+                return "Secreto"
             return self.tipo
         if indice == 'email':
             return self.email
