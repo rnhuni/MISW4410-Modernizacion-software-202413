@@ -182,7 +182,7 @@ class Logica(FachadaCajaDeSeguridad):
     def contar_claves_inseguras(self, clavesFavoritas):
         cantidad = 0
         for clave in clavesFavoritas:
-            if self.es_clave_segura(clave.clave):
+            if not self.es_clave_segura(clave.clave):
                 cantidad += 1
 
         return cantidad
