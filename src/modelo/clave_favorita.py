@@ -19,8 +19,6 @@ class ClaveFavorita(Base):
             return self.id
         if indice == 'id':
             return self.id
-        if indice == 'id':
-            return self.id
         if indice == 'nombre':
             return self.nombre
         if indice == 'clave':
