@@ -215,15 +215,17 @@ class Logica(FachadaCajaDeSeguridad):
         return 0
     
     def dar_reporte_seguridad(self):
-        cantidad_claves = len(self.claves)
-        inseguras = self.contar_claves_inseguras(self.claves)
+        claves = self.dar_claves_favoritas()
+        elementos = self.dar_elementos()
+        cantidad_claves = len(claves)
+        inseguras = self.contar_claves_inseguras(claves)
 
-        cantidad_elementos = len(self.elementos)
-        avencer = self.calcular_avencer(self.elementos)
+        cantidad_elementos = len(elementos)
+        avencer = self.calcular_avencer(elementos)
 
-        masdeuna = self.calcular_masdeuna(self.elementos)
+        masdeuna = self.calcular_masdeuna(elementos)
 
-        R = self.calcular_r(self.elementos)
+        R = self.calcular_r(elementos)
 
         nivel = self.calcular_nivel_seguridad(cantidad_claves, inseguras, cantidad_elementos, avencer, R)
 
