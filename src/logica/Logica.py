@@ -18,9 +18,9 @@ class Logica(FachadaCajaDeSeguridad):
 
         self.clave_maestra = 'clave'
 
-        self.claves_favoritas = []
+        self.claves_favoritas = self.dar_claves_favoritas()
 
-        self.elementos = []
+        self.elementos = self.dar_elementos()
 
     def dar_claveMaestra(self):
         return self.clave_maestra
@@ -33,9 +33,17 @@ class Logica(FachadaCajaDeSeguridad):
         self.elementos = session.query(Elemento).all()
         return self.elementos
     
+    def dar_elemento(self, nombre):
+        return session.query(Elemento).filter(Elemento.nombre == nombre).first()
+    
     def crear_clave(self, nombre, clave, pista):
-        if nombre is None or clave is None or pista is None or clave != pista:
-            return False
+        error = self.validar_crear_editar_clave(nombre, clave, pista)
+        if len(error) > 0:
+            return error
+        
+        clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
+        if clave_existente is not None:
+            return "Ya existe una clave con ese nombre"
         
         clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if clave_existente is not None:
@@ -45,7 +53,7 @@ class Logica(FachadaCajaDeSeguridad):
         session.add(nueva_clave)
         session.commit()
         session.close()
-        return True
+        return ""
 
     def es_clave_segura(selft, clave):
         tiene_mayusculas = False
@@ -86,35 +94,53 @@ class Logica(FachadaCajaDeSeguridad):
         return parsed_url.scheme and parsed_url.netloc
     
     def crear_login(self, nombre, email, usuario, password, url, notas):
-        if nombre is None or email is None or usuario is None or password is None or url is None or notas is None:
-            return False
-        
-        if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
-            return False
-        
-        if len(notas) > 512:
-            return False
-        
-        if not self.es_email(email): 
-            return False
-        
-        if not self.es_url(url): 
-            return False
-        
-        existe_clave = session.query(exists().where(ClaveFavorita.id == password)).scalar()
-        if not existe_clave: 
-            return False
-        
-        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
-        if existe_nombre: 
-            return False
+        err = self.validar_crear_editar_login(0, nombre, email, usuario, password, url, notas)
+        if len(err) > 0:
+            return err
         
         nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
         session.close()
 
-        return True
+        return ""
+    
+    def validar_crear_editar_login(self, id, nombre, email, usuario, password, url, notas):
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
+        
+        if email is None or len(email) == 0:
+            return "El campo email no puede estar vacío"
+        
+        if usuario is None or len(usuario) == 0:
+            return "El campo usuario no puede estar vacío"
+        
+        if url is None or len(url) == 0:
+            return "El campo url no puede estar vacío"
+        
+        if notas is None or len(notas) == 0:
+            return "El campo notas no puede estar vacío"
+            
+        if password is None or len(password) == 0:
+            return "El campo password no puede estar vacío"
+        
+        if len(nombre) > 255 or len(email) > 255 or len(usuario) > 255 or len(url) > 255:
+            return "Los campos no puede tener más de 255 caracteres"
+        
+        if len(notas) > 512:
+            return "El campo notas no puede tenes más de 512 caracteres"
+        
+        if not self.es_email(email): 
+            return "El campo email es inválido"
+        
+        if not self.es_url(url): 
+            return "El campo url es inválido"
+        
+        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
+        if existe_nombre: 
+            return "Ya existe un elemento con ese nombre"
+        
+        return ""
     
     def dar_clave(self, nombre_clave):
         self.claves_favoritas = session.query(ClaveFavorita).all()
@@ -128,17 +154,21 @@ class Logica(FachadaCajaDeSeguridad):
         return None
 
     def editar_clave(self, id,  nombre, clave, pista):
-        if id is None or nombre is None or clave is None or pista is None:
-            return False
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
         
-        existe_nombre = session.query(exists().where(ClaveFavorita.nombre == nombre)).scalar()
-
+        if clave is None  or len(clave) == 0:
+            return "El campo clave no puede estar vacío"
+        
+        if pista is None or len(pista) == 0:
+            return "El campo pista no puede estar vacío"
+        
+        clave_existente = self.claves_favoritas[id]
+        existe_nombre = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if existe_nombre:
-            consulta_clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).scalar()
-            if id != consulta_clave.id:
-                return False
+            if existe_nombre.id != clave_existente.id:
+                return "Ya existe una clave con ese nombre"
             
-        clave_existente = session.get(ClaveFavorita, id)
         clave_existente.nombre = nombre
         clave_existente.clave = clave
         clave_existente.pista = pista
@@ -147,7 +177,7 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
         session.close()
 
-        return True
+        return ""
     
     def contar_claves_inseguras(self, clavesFavoritas):
         cantidad = 0
@@ -196,15 +226,17 @@ class Logica(FachadaCajaDeSeguridad):
         return 0
     
     def dar_reporte_seguridad(self):
-        cantidad_claves = len(self.claves)
-        inseguras = self.contar_claves_inseguras(self.claves)
+        claves = self.dar_claves_favoritas()
+        elementos = self.dar_elementos()
+        cantidad_claves = len(claves)
+        inseguras = self.contar_claves_inseguras(claves)
 
-        cantidad_elementos = len(self.elementos)
-        avencer = self.calcular_avencer(self.elementos)
+        cantidad_elementos = len(elementos)
+        avencer = self.calcular_avencer(elementos)
 
-        masdeuna = self.calcular_masdeuna(self.elementos)
+        masdeuna = self.calcular_masdeuna(elementos)
 
-        R = self.calcular_r(self.elementos)
+        R = self.calcular_r(elementos)
 
         nivel = self.calcular_nivel_seguridad(cantidad_claves, inseguras, cantidad_elementos, avencer, R)
 
@@ -234,3 +266,15 @@ class Logica(FachadaCajaDeSeguridad):
         datos_reporte['nivel'] = nivel
 
         return datos_reporte
+    
+    def validar_crear_editar_clave(self, nombre, clave, pista):
+        if nombre is None or len(nombre) == 0:
+            return "El campo nombre no puede estar vacío"
+        
+        if clave is None  or len(clave) == 0:
+            return "El campo clave no puede estar vacío"
+        
+        if pista is None or len(pista) == 0:
+            return "El campo pista no puede estar vacío"
+        
+        return ""

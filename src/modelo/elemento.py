@@ -37,9 +37,21 @@ class Elemento(Base):
     claveFavorita = relationship("ClaveFavorita", foreign_keys=[clave_favorita_id])
 
     def __getitem__(self, indice):
-        if indice == 'nombreElemento':
+        if indice == 'id_elemento':
+            return self.id
+        if indice == 'id':
+            return self.id
+        if indice == 'nombre_elemento':
             return self.nombreElemento
         if indice == 'tipo':
+            if self.tipo == TipoElemento.LOGIN:
+                return "Login"
+            if self.tipo == TipoElemento.IDENTIFICACION:
+                return "Ids"
+            if self.tipo == TipoElemento.TARJETA:
+                return "Tarjeta"
+            if self.tipo == TipoElemento.SECRETO:
+                return "Secreto"
             return self.tipo
         if indice == 'email':
             return self.email
