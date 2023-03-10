@@ -304,4 +304,7 @@ class Logica(FachadaCajaDeSeguridad):
         if nombre_completo is None or len(nombre_completo) == 0:
             return "El campo nombre completo no puede estar vacío"
         
+        if fnacimiento is None or len(fnacimiento) == 0:
+            return "El campo fecha de nacimiento no puede estar vacío"
+        
         return ""
