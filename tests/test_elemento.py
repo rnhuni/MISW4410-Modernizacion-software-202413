@@ -149,3 +149,7 @@ class ElementoTestCase(unittest.TestCase):
     self.logica.eliminar_elemento(0)
     res = self.logica.dar_elementos()
     self.assertEqual(len(res), 0)
+  
+  def test_validar_crear_elemento_id_12(self):
+    res = self.logica.crear_id(nombre_elemento=None, numero=None, nombre_completo=None, fnacimiento=None, fexpedicion=None, fvencimiento=None, notas=None)
+    self.assertNotEqual(res, "")
