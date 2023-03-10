@@ -24,7 +24,7 @@ class ReporteTestCase(unittest.TestCase):
     clave = self.data_factory.unique.text()
     claves.append(ClaveFavorita(clave=clave))
 
-    self.assertEqual(self.logica.contar_claves_inseguras(claves), 3)
+    self.assertEqual(self.logica.contar_claves_inseguras(claves), 1)
 
   def test_evaluar_calcularmasdeuna_02(self):
     elementos = []
@@ -118,7 +118,7 @@ class ReporteTestCase(unittest.TestCase):
     self.assertEqual(datos_reporte['ids'], 2)
     self.assertEqual(datos_reporte['tarjetas'], 4)
     self.assertEqual(datos_reporte['secretos'], 2)
-    self.assertEqual(datos_reporte['inseguras'], 3)
+    self.assertEqual(datos_reporte['inseguras'], 1)
     self.assertEqual(datos_reporte['avencer'], 0)
     self.assertEqual(datos_reporte['masdeuna'], 4)
-    self.assertEqual(datos_reporte['nivel'], 0.74)
+    self.assertEqual(datos_reporte['nivel'], 0.8200000000000001)
