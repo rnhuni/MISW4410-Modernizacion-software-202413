@@ -267,3 +267,10 @@ class Logica(FachadaCajaDeSeguridad):
             return "El campo pista no puede estar vacío"
         
         return ""
+    
+    def eliminar_elemento(self, id):
+        elemento = self.elementos[id]
+        session.delete(elemento)
+        session.commit()
+        
+        del self.elementos[id]
