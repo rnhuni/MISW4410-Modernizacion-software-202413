@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 class Logica(FachadaCajaDeSeguridad):        
 
     def __init__(self):
-        if 'unittest' in sys.modules.keys():
+        if 'unittest' in sys.modules.keys():  # pragma: no cover
             Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
 
@@ -33,9 +33,6 @@ class Logica(FachadaCajaDeSeguridad):
         self.elementos = session.query(Elemento).all()
         return self.elementos
     
-    def dar_elemento(self, nombre):
-        return session.query(Elemento).filter(Elemento.nombre == nombre).first()
-    
     def crear_clave(self, nombre, clave, pista):
         error = self.validar_crear_editar_clave(nombre, clave, pista)
         if len(error) > 0:
@@ -45,14 +42,9 @@ class Logica(FachadaCajaDeSeguridad):
         if clave_existente is not None:
             return "Ya existe una clave con ese nombre"
         
-        clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
-        if clave_existente is not None:
-            return False
-        
         nueva_clave = ClaveFavorita(nombre=nombre, clave=clave, pista=pista)
         session.add(nueva_clave)
         session.commit()
-        session.close()
         return ""
 
     def es_clave_segura(selft, clave):
@@ -101,7 +93,6 @@ class Logica(FachadaCajaDeSeguridad):
         nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
-        session.close()
 
         return ""
     
@@ -173,9 +164,7 @@ class Logica(FachadaCajaDeSeguridad):
         clave_existente.clave = clave
         clave_existente.pista = pista
        
-        session.add(clave_existente)
         session.commit()
-        session.close()
 
         return ""
     

@@ -29,8 +29,20 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
   def test_evaluar_declaracion_campos_clavefavorita_03(self):
     nombre_clave = self.data_factory.unique.name()
+    clave = self.data_factory.unique.name()
+    pista = self.data_factory.unique.name()
+    
+    crear_respuesta = self.logica.crear_clave(nombre=None, clave=None, pista=None)
+    self.assertNotEqual(crear_respuesta, '')
+
     crear_respuesta = self.logica.crear_clave(nombre=nombre_clave, clave=None, pista=None)
     self.assertNotEqual(crear_respuesta, '')
+
+    crear_respuesta = self.logica.crear_clave(nombre=nombre_clave, clave=clave, pista=None)
+    self.assertNotEqual(crear_respuesta, '')
+
+    crear_respuesta = self.logica.crear_clave(nombre=nombre_clave, clave=clave, pista=pista)
+    self.assertEqual(crear_respuesta, '')
 
   def test_valida_clave_si_es_segura_05(self):
     respuesta = self.logica.es_clave_segura("clave123")
@@ -65,25 +77,62 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     resultado = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)    
     self.assertNotEqual(resultado, '')
 
+    resultado = self.logica.crear_clave(nombre=self.data_factory.unique.name(), clave=clave_aleatoria, pista=clave_aleatoria)    
+    self.assertEqual(resultado, '')
+
   def test_valida_que_clave_exista_09(self):
     nombre_aleatorio = self.data_factory.unique.name()
+    nombre_aleatorio_sin_insertar = self.data_factory.unique.name()
     clave_aleatoria = self.data_factory.unique.text()
     self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+
+    respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio_sin_insertar)
+    self.assertIsNone(respuesta)
 
     respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio)
     self.assertIsNotNone(respuesta)
   
   def test_valida_campos_requeridos_editar_clave_10(self):
+    nombre_clave_1 = self.data_factory.unique.name()
+    nombre_clave_1_nuevo = self.data_factory.unique.name()
+    nombre_clave_2 = self.data_factory.unique.name()
+    clave = self.data_factory.unique.name()
+    pista = self.data_factory.unique.name()
+
+    self.logica.crear_clave(nombre=nombre_clave_1, clave=clave, pista=pista)
+    self.logica.crear_clave(nombre=nombre_clave_2, clave=clave, pista=pista)
+    self.logica.dar_claves_favoritas()
+
     respuesta = self.logica.editar_clave(id=None, nombre=None, clave=None, pista=None)
     self.assertNotEqual(respuesta, '')
+
+    respuesta = self.logica.editar_clave(id=1, nombre=None, clave=None, pista=None)
+    self.assertNotEqual(respuesta, '')
+
+    respuesta = self.logica.editar_clave(id=1, nombre=nombre_clave_1, clave=None, pista=None)
+    self.assertNotEqual(respuesta, '')
+
+    respuesta = self.logica.editar_clave(id=1, nombre=nombre_clave_1, clave=clave, pista=None)
+    self.assertNotEqual(respuesta, '')
+
+    respuesta = self.logica.editar_clave(id=1, nombre=nombre_clave_1_nuevo, clave=clave, pista=pista)
+    self.assertEqual(respuesta, '')
   
   def test_valida_nombre_duplicado_editar_clave_11(self):
     nombre_aleatorio = self.data_factory.unique.name()
+    nombre_aleatorio_nuevo = self.data_factory.unique.name()
     nombre_aleatorio_dos = nombre_aleatorio + ' 2';
     clave_aleatoria = self.data_factory.unique.text()
     clave_aleatoria_dos = self.data_factory.unique.text()
     self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
     self.logica.crear_clave(nombre=nombre_aleatorio_dos, clave=clave_aleatoria_dos, pista=clave_aleatoria_dos)
-    self.logica.claves_favoritas = self.logica.dar_claves_favoritas()
+    self.logica.dar_claves_favoritas()
+
     respuesta = self.logica.editar_clave(id=1, nombre=nombre_aleatorio, clave=clave_aleatoria_dos, pista=clave_aleatoria_dos)
     self.assertNotEqual(respuesta, "")
+
+    respuesta = self.logica.editar_clave(id=1, nombre=nombre_aleatorio_nuevo, clave=clave_aleatoria_dos, pista=clave_aleatoria_dos)
+    self.assertEqual(respuesta, "")
+
+    respuesta = self.logica.editar_clave(id=1, nombre=nombre_aleatorio_nuevo, clave=clave_aleatoria_dos, pista=self.data_factory.unique.text())
+    self.assertEqual(respuesta, "")
