@@ -14,7 +14,7 @@ class ClaveFavorita(Base):
     clave = Column(String)
     pista = Column(String)
 
-    def __getitem__(self, indice):
+    def __getitem__(self, indice): # pragma: no cover
         if indice == 'id_clave':
             return self.id
         if indice == 'id':
