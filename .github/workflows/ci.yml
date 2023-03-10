@@ -5,6 +5,7 @@ on:
       - 'test_action_feature**'
 jobs:
   pruebas_feature:
+    if: ${{ contains(github.event.head_commit.message, 'MERGE') }}
     name: Pruebas en rama feature
     runs-on: ubuntu-latest
     steps:
