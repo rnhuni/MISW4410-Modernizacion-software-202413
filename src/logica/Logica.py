@@ -274,3 +274,28 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
         
         del self.elementos[id]
+
+    def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        
+        return ""
+    
+    def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        if nombre_elemento is None or len(nombre_elemento) == 0:
+            return "El campo nombre elemento no puede estar vacío"
+        
+        return ""
+    
+    def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        return ""
+    
+    def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        if nombre_elemento is None or len(nombre_elemento) == 0:
+            return "El campo nombre elemento no puede estar vacío"
+        
+        return ""
