@@ -307,4 +307,7 @@ class Logica(FachadaCajaDeSeguridad):
         if fnacimiento is None or len(fnacimiento) == 0:
             return "El campo fecha de nacimiento no puede estar vacío"
         
+        if fexpedicion is None or len(fexpedicion) == 0:
+            return "El campo fecha de expedición no puede estar vacío"
+        
         return ""
