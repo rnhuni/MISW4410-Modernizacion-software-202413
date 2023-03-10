@@ -4,8 +4,8 @@ on:
     branches: 
       - 'test_action_feature**'
 jobs:
-  job1:
-    name: Pruebas
+  pruebas_feature:
+    name: Pruebas en rama feature
     runs-on: ubuntu-latest
     steps:
     - name: Checkout de repositorio
@@ -21,3 +21,22 @@ jobs:
     - name: Correr pruebas
       id: correr-pruebas
       run: python -m unittest discover -s tests -v
+    - name: Cálculo de cubrimiento
+      id: cubrimiento
+      run: |
+          coverage run -m unittest discover -s tests -v
+          coverage report -m
+  automerge_develop:
+    name: Automerge con rama develop
+    needs: pruebas_feature
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: ""
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: ${{ github.ref }}
+          target-branch: test_action_develop
