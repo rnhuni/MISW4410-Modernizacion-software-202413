@@ -140,3 +140,12 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(res0, "")
     self.assertNotEqual(res1, "")
     self.assertEqual(res2, "")
+
+  def test_validar_eliminar_elemento_11(self):
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=self.data_factory.text(), password="1", url=self.data_factory.unique.url(), notas=self.data_factory.text())
+    res = self.logica.dar_elementos()
+    self.assertEqual(len(res), 1)
+
+    self.logica.eliminar_elemento(0)
+    res = self.logica.dar_elementos()
+    self.assertEqual(len(res), 0)
