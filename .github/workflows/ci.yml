@@ -38,5 +38,5 @@ jobs:
           MERGE_LABELS: ""
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          source-branch: ${{ github.ref }}
-          target-branch: test_action_develop
+          source-branch: test_action_develop
+          target-branch: ${{ github.ref }}
