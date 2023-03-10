@@ -135,4 +135,4 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.assertEqual(respuesta, "")
 
     respuesta = self.logica.editar_clave(id=1, nombre=nombre_aleatorio_nuevo, clave=clave_aleatoria_dos, pista=self.data_factory.unique.text())
-    self.assertEqual(respuesta, "")
+    self.assertNotEqual(respuesta, "")
