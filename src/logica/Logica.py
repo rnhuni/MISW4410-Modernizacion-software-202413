@@ -301,4 +301,7 @@ class Logica(FachadaCajaDeSeguridad):
         if numero is None or len(numero) == 0:
             return "El campo número no puede estar vacío"
         
+        if nombre_completo is None or len(nombre_completo) == 0:
+            return "El campo nombre completo no puede estar vacío"
+        
         return ""
