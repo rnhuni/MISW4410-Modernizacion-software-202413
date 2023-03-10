@@ -28,13 +28,33 @@ jobs:
           coverage run -m unittest discover -s tests -v
           coverage report -m
   automerge_develop:
-    name: Automerge con rama develop
+    name: Unir funcionalidad con rama develop
     needs: pruebas_feature
     runs-on: ubuntu-latest
     steps:
-      - name: automerge
+      - name: automerge feature -> develop
         uses: tukasz/direct-merge-action@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: ${{ github.ref }}
           target-branch: test_action_develop
+  autorelease:
+    name: Crear rama release con la nueva funcionalidad
+    needs: automerge_develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear rama release
+        run: |
+          git checkout -b release
+          git push -f -u origin release
+  automerge_main:
+    name: Unir release con rama main
+    needs: autorelease
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge release -> main
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: release
+          target-branch: test_action_main
