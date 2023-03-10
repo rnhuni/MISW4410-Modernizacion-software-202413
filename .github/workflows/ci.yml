@@ -43,6 +43,8 @@ jobs:
     needs: automerge_develop
     runs-on: ubuntu-latest
     steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
       - name: Crear rama release
         run: |
           git checkout -b release
