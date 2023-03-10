@@ -35,8 +35,33 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEquals(elementos[0]['nombre_elemento'], nombre_elemento)
 
   def test_validar_campos_requeridos_crear_elemento_login_03(self):
+    nombre = self.data_factory.unique.name()
+    email = self.data_factory.unique.email()
+    usuario = self.data_factory.unique.name()
+    password = self.data_factory.unique.name()
+    url = self.data_factory.unique.url()
+    notas = self.data_factory.unique.text()
+
     res = self.logica.crear_login(nombre=None, email=None, usuario=None, password=None, url=None, notas=None)
     self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=None, usuario=None, password=None, url=None, notas=None)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=email, usuario=None, password=None, url=None, notas=None)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=email, usuario=usuario, password=None, url=None, notas=None)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=email, usuario=usuario, password=password, url=None, notas=None)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=email, usuario=usuario, password=password, url=url, notas=None)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_login(nombre=nombre, email=email, usuario=usuario, password=password, url=url, notas=notas)
+    self.assertEqual(res, "")
 
   def test_validar_longitud_campos_requeridos_crear_elemento_login_04(self):
     self._insertar_clave()

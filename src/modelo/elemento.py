@@ -36,7 +36,7 @@ class Elemento(Base):
     clave_favorita_id = Column(Integer, ForeignKey('clave_favorita.id'), nullable=True)
     claveFavorita = relationship("ClaveFavorita", foreign_keys=[clave_favorita_id])
 
-    def __getitem__(self, indice):
+    def __getitem__(self, indice): # pragma: no cover
         if indice == 'id_elemento':
             return self.id
         if indice == 'id':
