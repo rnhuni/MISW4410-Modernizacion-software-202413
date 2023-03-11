@@ -244,11 +244,11 @@ class ElementoTestCase(unittest.TestCase):
                           fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
 
     elementos = self.logica.dar_elementos()
-    self.assertEqual(elementos.nombreElemento, nombre_nuevo)
-    self.assertEqual(elementos.numero, numero_nuevo)
-    self.assertEqual(elementos.nombre, nombre_completo_nuevo)
-    self.assertEqual(elementos.fechaNacimiento, fnacimiento_nuevo)
-    self.assertEqual(elementos.fechaExp, fexpedicion_nuevo)
-    self.assertEqual(elementos.fechaVenc, fvencimiento_nuevo)
-    self.assertEqual(elementos.notas, notas_nuevo)
+    self.assertEqual(elementos[0].nombreElemento, nombre_nuevo)
+    self.assertEqual(elementos[0].numero, numero_nuevo)
+    self.assertEqual(elementos[0].nombre, nombre_completo_nuevo)
+    self.assertEqual(elementos[0]['fechaNacimiento'], str(fnacimiento_nuevo))
+    self.assertEqual(elementos[0]['fechaExp'], str(fexpedicion_nuevo))
+    self.assertEqual(elementos[0]['fechaVenc'], str(fvencimiento_nuevo))
+    self.assertEqual(elementos[0].notas, notas_nuevo)
     
