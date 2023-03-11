@@ -316,4 +316,7 @@ class Logica(FachadaCajaDeSeguridad):
         if notas is None or len(notas) == 0:
             return "El campo notas no puede estar vacío"
         
+        if len(nombre_elemento) > 255 or len(numero) > 255 or len(nombre_completo) > 255:
+            return "Los campos no puede tener más de 255 caracteres"
+        
         return ""
