@@ -8,6 +8,7 @@ from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
 from urllib.parse import urlparse
+from dateutil.parser import parse
 
 class Logica(FachadaCajaDeSeguridad):        
 
@@ -267,3 +268,108 @@ class Logica(FachadaCajaDeSeguridad):
             return "El campo pista no puede estar vacío"
         
         return ""
+    
+    def eliminar_elemento(self, id):
+        elemento = self.elementos[id]
+        session.delete(elemento)
+        session.commit()
+        
+        del self.elementos[id]
+
+    def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        
+        return ""
+    
+    def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        nuevo = Elemento(tipo=TipoElemento.IDENTIFICACION, nombreElemento=nombre_elemento,
+                         numero=numero, nombre=nombre_completo, fechaNacimiento=parse(fnacimiento),
+                         fechaExp=parse(fexpedicion), fechaVenc=parse(fvencimiento), notas=notas)
+        session.add(nuevo)
+        session.commit()
+        
+        return ""
+
+    def editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        
+        elemento_existente = self.elementos[id]
+            
+        elemento_existente.nombreElemento = nombre_elemento
+        elemento_existente.numero = numero
+        elemento_existente.nombre = nombre_completo
+        elemento_existente.fechaNacimiento = parse(fnacimiento)
+        elemento_existente.fechaExp = parse(fexpedicion)
+        elemento_existente.fechaVenc = parse(fvencimiento)
+        elemento_existente.notas = notas
+       
+        session.commit()
+    
+    def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        if id + 1 > len(self.elementos):
+            return "El indice es inválido"
+        
+        if nombre_elemento is None or len(nombre_elemento) == 0:
+            return "El campo nombre elemento no puede estar vacío"
+        
+        if numero is None or len(numero) == 0:
+            return "El campo número no puede estar vacío"
+        
+        if nombre_completo is None or len(nombre_completo) == 0:
+            return "El campo nombre completo no puede estar vacío"
+        
+        if fnacimiento is None or len(fnacimiento) == 0:
+            return "El campo fecha de nacimiento no puede estar vacío"
+        
+        if fexpedicion is None or len(fexpedicion) == 0:
+            return "El campo fecha de expedición no puede estar vacío"
+        
+        if fvencimiento is None or len(fvencimiento) == 0:
+            return "El campo fecha de vencimiento no puede estar vacío"
+        
+        if notas is None or len(notas) == 0:
+            return "El campo notas no puede estar vacío"
+        
+        if len(nombre_elemento) > 255 or len(numero) > 255 or len(nombre_completo) > 255:
+            return "Los campos no puede tener más de 255 caracteres"
+        
+        if len(notas) > 512:
+            return "El campo notas no puede tenes más de 512 caracteres"
+        
+        try:
+            parse(fnacimiento)
+        except ValueError:
+            return "El campo fecha de nacimiento es inválido"
+        datefe = None
+        try:
+            datefe = parse(fexpedicion)
+        except ValueError:
+            return "El campo fecha de expedición es inválido"
+        datefv = None
+        try:
+            datefv = parse(fvencimiento)
+        except ValueError:
+            return "El campo fecha de vencimiento es inválido"
+        if  datefv <= datefe:
+            return "El campo fecha de expedición debe ser menor a fecha de vencimiento"
+        
+        if self.validar_nombre_elemento_duplicado(id, nombre_elemento):
+            return "Ya existe un elemento con ese nombre"
+        
+        return ""
+    
+    def dar_elemento(self, id_elemento):
+        if id_elemento + 1 > len(self.elementos):
+            return None
+        
+        return self.elementos[id_elemento]
+    
+    def validar_nombre_elemento_duplicado(self, id, nombre):
+        return session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
