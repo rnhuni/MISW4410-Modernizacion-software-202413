@@ -293,6 +293,12 @@ class Logica(FachadaCajaDeSeguridad):
         error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
         if len(error) > 0:
             return error
+        nuevo = Elemento(tipo=TipoElemento.IDENTIFICACION, nombreElemento=nombre_elemento,
+                         numero=numero, nombre=nombre_completo, fechaNacimiento=parse(fnacimiento),
+                         fechaExp=parse(fexpedicion), fechaVenc=parse(fvencimiento), notas=notas)
+        session.add(nuevo)
+        session.commit()
+        
         return ""
     
     def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
