@@ -7,6 +7,7 @@ from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
+from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
 from dateutil.parser import parse
 
@@ -31,7 +32,7 @@ class Logica(FachadaCajaDeSeguridad):
         return self.claves_favoritas
     
     def dar_elementos(self):
-        self.elementos = session.query(Elemento).all()
+        self.elementos = session.query(Elemento).options(joinedload('clave_favorita')).all()
         return self.elementos
     
     def crear_clave(self, nombre, clave, pista):
@@ -91,7 +92,9 @@ class Logica(FachadaCajaDeSeguridad):
         if len(err) > 0:
             return err
         
-        nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == password).first()
+        
+        nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=clave.id, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
 
@@ -135,15 +138,9 @@ class Logica(FachadaCajaDeSeguridad):
         return ""
     
     def dar_clave(self, nombre_clave):
-        self.claves_favoritas = session.query(ClaveFavorita).all()
-
-        i = 0
-        while i < len(self.claves_favoritas):
-            if self.claves_favoritas[i]['nombre'] == nombre_clave:
-                return self.claves_favoritas[i]['id']
-            i = i+1
-
-        return None
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre_clave).first()
+        if clave is not None:
+            return clave.clave
 
     def editar_clave(self, id,  nombre, clave, pista):
         if nombre is None or len(nombre) == 0:

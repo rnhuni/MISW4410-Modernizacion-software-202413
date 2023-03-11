@@ -34,7 +34,7 @@ class Elemento(Base):
     fechaExp = Column(Date)
     fechaVenc = Column(Date)
     clave_favorita_id = Column(Integer, ForeignKey('clave_favorita.id'), nullable=True)
-    claveFavorita = relationship("ClaveFavorita", foreign_keys=[clave_favorita_id])
+    clave_favorita = relationship(ClaveFavorita, foreign_keys=[clave_favorita_id])
 
     def __getitem__(self, indice): # pragma: no cover
         if indice == 'id_elemento':
@@ -80,4 +80,4 @@ class Elemento(Base):
         if indice == 'fecha_venc':
             return str(self.fechaVenc)
         if indice == 'clave':
-            return self.claveFavorita.nombre
+            return self.clave_favorita.nombre
