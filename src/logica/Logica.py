@@ -317,6 +317,8 @@ class Logica(FachadaCajaDeSeguridad):
         elemento_existente.notas = notas
        
         session.commit()
+
+        return ""
     
     def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
         if id + 1 > len(self.elementos):
@@ -378,4 +380,11 @@ class Logica(FachadaCajaDeSeguridad):
         return self.elementos[id_elemento]
     
     def validar_nombre_elemento_duplicado(self, id, nombre):
-        return session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
+        existe_nombre = session.query(Elemento).filter(Elemento.nombreElemento == nombre).first()
+
+        if id < 0:
+            if existe_nombre is None:
+                return False
+            return True
+        
+        return existe_nombre and self.elementos[id].id != existe_nombre.id
