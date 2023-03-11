@@ -210,7 +210,7 @@ class ElementoTestCase(unittest.TestCase):
 
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
     self.assertNotEqual(res, "")
-
+  
   def test_validar_crear_elemento_id_13(self):
     nombre_elemento=self.data_factory.unique.name()
     numero=self.data_factory.unique.name()
@@ -243,12 +243,11 @@ class ElementoTestCase(unittest.TestCase):
                           fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
                           fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
 
-    elementos = self.logica.dar_elementos()
-    self.assertEqual(elementos[0].nombreElemento, nombre_nuevo)
-    self.assertEqual(elementos[0].numero, numero_nuevo)
-    self.assertEqual(elementos[0].nombre, nombre_completo_nuevo)
-    self.assertEqual(elementos[0]['fechaNacimiento'], str(fnacimiento_nuevo))
-    self.assertEqual(elementos[0]['fechaExp'], str(fexpedicion_nuevo))
-    self.assertEqual(elementos[0]['fechaVenc'], str(fvencimiento_nuevo))
-    self.assertEqual(elementos[0].notas, notas_nuevo)
-    
+    elemento = self.logica.dar_elemento(0)
+    self.assertEqual(elemento.nombreElemento, nombre_nuevo)
+    self.assertEqual(elemento.numero, numero_nuevo)
+    self.assertEqual(elemento.nombre, nombre_completo_nuevo)
+    self.assertEqual(elemento['fecha_nacimiento'], str(fnacimiento_nuevo))
+    self.assertEqual(elemento['fecha_exp'], str(fexpedicion_nuevo))
+    self.assertEqual(elemento['fecha_venc'], str(fvencimiento_nuevo))
+    self.assertEqual(elemento.notas, notas_nuevo)

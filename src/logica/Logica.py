@@ -300,6 +300,23 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
         
         return ""
+
+    def editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        
+        elemento_existente = self.elementos[id]
+            
+        elemento_existente.nombreElemento = nombre_elemento
+        elemento_existente.numero = numero
+        elemento_existente.nombre = nombre_completo
+        elemento_existente.fechaNacimiento = parse(fnacimiento)
+        elemento_existente.fechaExp = parse(fexpedicion)
+        elemento_existente.fechaVenc = parse(fvencimiento)
+        elemento_existente.notas = notas
+       
+        session.commit()
     
     def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
         if nombre_elemento is None or len(nombre_elemento) == 0:
@@ -350,6 +367,9 @@ class Logica(FachadaCajaDeSeguridad):
             return "Ya existe un elemento con ese nombre"
         
         return ""
+    
+    def dar_elemento(self, id_elemento):
+        return self.elementos[id_elemento]
     
     def validar_nombre_elemento_duplicado(self, id, nombre):
         return session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
