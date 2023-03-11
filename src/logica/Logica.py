@@ -319,4 +319,7 @@ class Logica(FachadaCajaDeSeguridad):
         if len(nombre_elemento) > 255 or len(numero) > 255 or len(nombre_completo) > 255:
             return "Los campos no puede tener más de 255 caracteres"
         
+        if len(notas) > 512:
+            return "El campo notas no puede tenes más de 512 caracteres"
+        
         return ""
