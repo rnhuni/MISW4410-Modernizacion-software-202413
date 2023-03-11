@@ -173,3 +173,7 @@ class ElementoTestCase(unittest.TestCase):
     fexpedicion=self.data_factory.unique.date()
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=None, notas=None)
     self.assertNotEqual(res, "")
+
+    fvencimiento=self.data_factory.unique.date()
+    res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=None)
+    self.assertNotEqual(res, "")
