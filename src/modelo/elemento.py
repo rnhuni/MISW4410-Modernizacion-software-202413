@@ -47,7 +47,7 @@ class Elemento(Base):
             if self.tipo == TipoElemento.LOGIN:
                 return "Login"
             if self.tipo == TipoElemento.IDENTIFICACION:
-                return "Ids"
+                return "Identificación"
             if self.tipo == TipoElemento.TARJETA:
                 return "Tarjeta"
             if self.tipo == TipoElemento.SECRETO:
@@ -73,11 +73,11 @@ class Elemento(Base):
             return self.telefono
         if indice == 'secreto':
             return self.secreto
-        if indice == 'fechaNacimiento':
-            return self.fechaNacimiento
-        if indice == 'fechaExp':
-            return self.fechaExp
-        if indice == 'fechaVen':
-            return self.fechaVenc
-        if indice == 'claveFavorita':
-            return self.claveFavorita
+        if indice == 'fecha_nacimiento':
+            return str(self.fechaNacimiento)
+        if indice == 'fecha_exp':
+            return str(self.fechaExp)
+        if indice == 'fecha_venc':
+            return str(self.fechaVenc)
+        if indice == 'clave':
+            return self.claveFavorita.nombre
