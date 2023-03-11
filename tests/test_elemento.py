@@ -210,3 +210,45 @@ class ElementoTestCase(unittest.TestCase):
 
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
     self.assertNotEqual(res, "")
+
+  def test_validar_crear_elemento_id_13(self):
+    nombre_elemento=self.data_factory.unique.name()
+    numero=self.data_factory.unique.name()
+    nombre_completo=self.data_factory.unique.name()
+    fnacimiento=self.data_factory.unique.date()
+    fexpedicion=self.data_factory.unique.date()
+    fvencimiento=self.data_factory.unique.date()
+    if fexpedicion > fvencimiento:
+      aux = fvencimiento
+      fvencimiento = fexpedicion
+      fexpedicion = aux
+    notas=self.data_factory.unique.text()
+
+    self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
+    self.logica.dar_elementos()
+
+    nombre_nuevo=self.data_factory.unique.name()
+    numero_nuevo=self.data_factory.unique.name()
+    nombre_completo_nuevo=self.data_factory.unique.name()
+    fnacimiento_nuevo=self.data_factory.unique.date()
+    fexpedicion_nuevo=self.data_factory.unique.date()
+    fvencimiento_nuevo=self.data_factory.unique.date()
+    if fexpedicion_nuevo > fvencimiento_nuevo:
+      aux = fvencimiento_nuevo
+      fvencimiento_nuevo = fexpedicion_nuevo
+      fexpedicion_nuevo = aux
+    notas_nuevo=self.data_factory.unique.text()
+
+    self.logica.editar_id(0, nombre_elemento=nombre_nuevo, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
+                          fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
+                          fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
+
+    elementos = self.logica.dar_elementos()
+    self.assertEqual(elementos.nombreElemento, nombre_nuevo)
+    self.assertEqual(elementos.numero, numero_nuevo)
+    self.assertEqual(elementos.nombre, nombre_completo_nuevo)
+    self.assertEqual(elementos.fechaNacimiento, fnacimiento_nuevo)
+    self.assertEqual(elementos.fechaExp, fexpedicion_nuevo)
+    self.assertEqual(elementos.fechaVenc, fvencimiento_nuevo)
+    self.assertEqual(elementos.notas, notas_nuevo)
+    
