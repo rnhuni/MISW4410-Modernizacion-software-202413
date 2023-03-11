@@ -340,4 +340,10 @@ class Logica(FachadaCajaDeSeguridad):
         if  datefv <= datefe:
             return "El campo fecha de expedición debe ser menor a fecha de vencimiento"
         
+        if self.validar_nombre_elemento_duplicado(id, nombre_elemento):
+            return "Ya existe un elemento con ese nombre"
+        
         return ""
+    
+    def validar_nombre_elemento_duplicado(self, id, nombre):
+        return session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
