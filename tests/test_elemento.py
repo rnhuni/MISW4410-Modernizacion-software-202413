@@ -204,3 +204,9 @@ class ElementoTestCase(unittest.TestCase):
 
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fvencimiento), fvencimiento=str(fexpedicion), notas=notas)
     self.assertNotEqual(res, "")
+
+    res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
+    self.assertEqual(res, "")
+
+    res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
+    self.assertNotEqual(res, "")
