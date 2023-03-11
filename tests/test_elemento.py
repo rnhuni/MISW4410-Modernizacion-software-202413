@@ -178,6 +178,11 @@ class ElementoTestCase(unittest.TestCase):
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=None)
     self.assertNotEqual(res, "")
 
+    if fexpedicion > fvencimiento:
+      aux = fvencimiento
+      fvencimiento = fexpedicion
+      fexpedicion = aux
+
     notas=self.data_factory.unique.text()
     texto_largo = self.data_factory.sentence(300)
     res = self.logica.crear_id(nombre_elemento=texto_largo, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
@@ -195,4 +200,7 @@ class ElementoTestCase(unittest.TestCase):
     self.assertNotEqual(res, "")
 
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=texto, notas=notas)
+    self.assertNotEqual(res, "")
+
+    res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fvencimiento), fvencimiento=str(fexpedicion), notas=notas)
     self.assertNotEqual(res, "")
