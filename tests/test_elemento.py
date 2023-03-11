@@ -251,3 +251,11 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(elemento['fecha_exp'], str(fexpedicion_nuevo))
     self.assertEqual(elemento['fecha_venc'], str(fvencimiento_nuevo))
     self.assertEqual(elemento.notas, notas_nuevo)
+
+    error = self.logica.editar_id(15, nombre_elemento=nombre_nuevo, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
+                          fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
+                          fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
+    self.assertNotEqual(len(error), 0)
+
+    elemento = self.logica.dar_elemento(15)
+    self.assertIsNone(elemento)

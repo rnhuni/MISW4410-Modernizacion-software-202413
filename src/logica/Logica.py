@@ -283,12 +283,6 @@ class Logica(FachadaCajaDeSeguridad):
         
         return ""
     
-    def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
-        if nombre_elemento is None or len(nombre_elemento) == 0:
-            return "El campo nombre elemento no puede estar vacío"
-        
-        return ""
-    
     def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
         error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
         if len(error) > 0:
@@ -319,6 +313,9 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
     
     def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        if id + 1 > len(self.elementos):
+            return "El indice es inválido"
+        
         if nombre_elemento is None or len(nombre_elemento) == 0:
             return "El campo nombre elemento no puede estar vacío"
         
@@ -369,6 +366,9 @@ class Logica(FachadaCajaDeSeguridad):
         return ""
     
     def dar_elemento(self, id_elemento):
+        if id_elemento + 1 > len(self.elementos):
+            return None
+        
         return self.elementos[id_elemento]
     
     def validar_nombre_elemento_duplicado(self, id, nombre):
