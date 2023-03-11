@@ -327,15 +327,17 @@ class Logica(FachadaCajaDeSeguridad):
             parse(fnacimiento)
         except ValueError:
             return "El campo fecha de nacimiento es inválido"
-        
+        datefe = None
         try:
-            parse(fexpedicion)
+            datefe = parse(fexpedicion)
         except ValueError:
             return "El campo fecha de expedición es inválido"
-        
+        datefv = None
         try:
-            parse(fvencimiento)
+            datefv = parse(fvencimiento)
         except ValueError:
             return "El campo fecha de vencimiento es inválido"
+        if  datefv <= datefe:
+            return "El campo fecha de expedición debe ser menor a fecha de vencimiento"
         
         return ""
