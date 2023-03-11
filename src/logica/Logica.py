@@ -8,6 +8,7 @@ from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
 from urllib.parse import urlparse
+from dateutil.parser import parse
 
 class Logica(FachadaCajaDeSeguridad):        
 
@@ -321,5 +322,20 @@ class Logica(FachadaCajaDeSeguridad):
         
         if len(notas) > 512:
             return "El campo notas no puede tenes más de 512 caracteres"
+        
+        try:
+            parse(fnacimiento)
+        except ValueError:
+            return "El campo fecha de nacimiento es inválido"
+        
+        try:
+            parse(fexpedicion)
+        except ValueError:
+            return "El campo fecha de expedición es inválido"
+        
+        try:
+            parse(fvencimiento)
+        except ValueError:
+            return "El campo fecha de vencimiento es inválido"
         
         return ""
