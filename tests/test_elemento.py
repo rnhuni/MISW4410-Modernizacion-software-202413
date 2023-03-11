@@ -211,7 +211,7 @@ class ElementoTestCase(unittest.TestCase):
     res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
     self.assertNotEqual(res, "")
   
-  def test_validar_crear_elemento_id_13(self):
+  def test_validar_editar_elemento_id_13(self):
     nombre_elemento=self.data_factory.unique.name()
     numero=self.data_factory.unique.name()
     nombre_completo=self.data_factory.unique.name()
