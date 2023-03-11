@@ -181,3 +181,7 @@ class ElementoTestCase(unittest.TestCase):
     texto_largo = self.data_factory.sentence(300)
     res = self.logica.crear_id(nombre_elemento=texto_largo, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
     self.assertNotEqual(res, "")
+
+    texto_muy_largo = self.data_factory.sentence(600)
+    res = self.logica.crear_id(nombre_elemento=nombre_elemento, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=texto_muy_largo)
+    self.assertNotEqual(res, "")
