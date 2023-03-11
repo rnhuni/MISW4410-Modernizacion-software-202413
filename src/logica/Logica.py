@@ -313,4 +313,7 @@ class Logica(FachadaCajaDeSeguridad):
         if fvencimiento is None or len(fvencimiento) == 0:
             return "El campo fecha de vencimiento no puede estar vacío"
         
+        if notas is None or len(notas) == 0:
+            return "El campo notas no puede estar vacío"
+        
         return ""
