@@ -239,9 +239,10 @@ class ElementoTestCase(unittest.TestCase):
       fexpedicion_nuevo = aux
     notas_nuevo=self.data_factory.unique.text()
 
-    self.logica.editar_id(0, nombre_elemento=nombre_nuevo, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
+    error = self.logica.editar_id(0, nombre_elemento=nombre_nuevo, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
                           fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
                           fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
+    self.assertEqual(error, "")
 
     elemento = self.logica.dar_elemento(0)
     self.assertEqual(elemento.nombreElemento, nombre_nuevo)
@@ -255,7 +256,14 @@ class ElementoTestCase(unittest.TestCase):
     error = self.logica.editar_id(15, nombre_elemento=nombre_nuevo, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
                           fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
                           fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
-    self.assertNotEqual(len(error), 0)
+    self.assertNotEqual(error, "")
 
     elemento = self.logica.dar_elemento(15)
     self.assertIsNone(elemento)
+
+    nombre_nuevo_2=self.data_factory.unique.name()
+    self.logica.crear_id(nombre_elemento=nombre_nuevo_2, numero=numero, nombre_completo=nombre_completo, fnacimiento=str(fnacimiento), fexpedicion=str(fexpedicion), fvencimiento=str(fvencimiento), notas=notas)
+    error = self.logica.editar_id(0, nombre_elemento=nombre_nuevo_2, numero=numero_nuevo, nombre_completo=nombre_completo_nuevo, 
+                          fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
+                          fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
+    self.assertNotEqual(error, "")
