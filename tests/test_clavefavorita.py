@@ -83,14 +83,16 @@ class ClaveFavoritaTestCase(unittest.TestCase):
   def test_valida_que_clave_exista_09(self):
     nombre_aleatorio = self.data_factory.unique.name()
     nombre_aleatorio_sin_insertar = self.data_factory.unique.name()
-    clave_aleatoria = self.data_factory.unique.text()
-    self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+    clave_aleatoria = self.data_factory.unique.name()
+    error = self.logica.crear_clave(nombre=nombre_aleatorio, clave=clave_aleatoria, pista=clave_aleatoria)
+    self.assertEqual(error, "")
 
-    respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio_sin_insertar)
+    respuesta = self.logica.dar_clave(nombre_aleatorio_sin_insertar)
     self.assertIsNone(respuesta)
 
-    respuesta = self.logica.dar_clave(nombre_clave=nombre_aleatorio)
+    respuesta = self.logica.dar_clave(nombre_aleatorio)
     self.assertIsNotNone(respuesta)
+    
   
   def test_valida_campos_requeridos_editar_clave_10(self):
     nombre_clave_1 = self.data_factory.unique.name()
