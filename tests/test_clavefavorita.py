@@ -138,3 +138,25 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
     respuesta = self.logica.editar_clave(id=1, nombre=nombre_aleatorio_nuevo, clave=clave_aleatoria_dos, pista=self.data_factory.unique.text())
     self.assertEqual(respuesta, "")
+
+  def test_validar_clave_favorita_en_elemento_12(self):
+    nombre_clave = self.data_factory.unique.name()
+    clave = self.data_factory.unique.password(special_chars=False)
+    self.logica.crear_clave(nombre=nombre_clave, clave=clave, pista=clave)
+    
+    texto_normal = self.data_factory.text()
+    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=self.data_factory.unique.name(), password=nombre_clave, url=self.data_factory.unique.url(), notas=texto_normal)
+      
+    consulta = self.logica.dar_clave_id(nombre_clave)
+    respuesta = self.logica.eliminar_clave(consulta-1)
+
+    self.assertEqual(respuesta, False)
+
+    nombre_clave_nuevo = self.data_factory.unique.name()
+    clave_nuevo = self.data_factory.unique.password(special_chars=False)
+    self.logica.crear_clave(nombre=nombre_clave_nuevo, clave=clave_nuevo, pista=clave_nuevo)
+
+    consulta = self.logica.dar_clave_id(nombre_clave_nuevo)
+    respuesta = self.logica.eliminar_clave(consulta-1)
+
+    self.assertEqual(respuesta, True)

@@ -81,3 +81,5 @@ class Elemento(Base):
             return str(self.fechaVenc)
         if indice == 'clave':
             return self.clave_favorita.nombre
+        if indice == 'clave_favorita_id':
+            return self.clave_favorita_id
