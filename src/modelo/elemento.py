@@ -34,7 +34,7 @@ class Elemento(Base):
     fechaExp = Column(Date)
     fechaVenc = Column(Date)
     clave_favorita_id = Column(Integer, ForeignKey('clave_favorita.id'), nullable=True)
-    claveFavorita = relationship("ClaveFavorita", foreign_keys=[clave_favorita_id])
+    clave_favorita = relationship(ClaveFavorita, foreign_keys=[clave_favorita_id])
 
     def __getitem__(self, indice): # pragma: no cover
         if indice == 'id_elemento':
@@ -47,7 +47,7 @@ class Elemento(Base):
             if self.tipo == TipoElemento.LOGIN:
                 return "Login"
             if self.tipo == TipoElemento.IDENTIFICACION:
-                return "Ids"
+                return "Identificación"
             if self.tipo == TipoElemento.TARJETA:
                 return "Tarjeta"
             if self.tipo == TipoElemento.SECRETO:
@@ -73,11 +73,11 @@ class Elemento(Base):
             return self.telefono
         if indice == 'secreto':
             return self.secreto
-        if indice == 'fechaNacimiento':
-            return self.fechaNacimiento
-        if indice == 'fechaExp':
-            return self.fechaExp
-        if indice == 'fechaVen':
-            return self.fechaVenc
-        if indice == 'claveFavorita':
-            return self.claveFavorita
+        if indice == 'fecha_nacimiento':
+            return str(self.fechaNacimiento)
+        if indice == 'fecha_exp':
+            return str(self.fechaExp)
+        if indice == 'fecha_venc':
+            return str(self.fechaVenc)
+        if indice == 'clave':
+            return self.clave_favorita.nombre

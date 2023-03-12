@@ -7,7 +7,10 @@ from src.modelo.clave_favorita import ClaveFavorita
 from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
+from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
+from dateutil.parser import parse
+import datetime
 
 class Logica(FachadaCajaDeSeguridad):        
 
@@ -30,7 +33,7 @@ class Logica(FachadaCajaDeSeguridad):
         return self.claves_favoritas
     
     def dar_elementos(self):
-        self.elementos = session.query(Elemento).all()
+        self.elementos = session.query(Elemento).options(joinedload(Elemento.clave_favorita)).all()
         return self.elementos
     
     def crear_clave(self, nombre, clave, pista):
@@ -40,7 +43,7 @@ class Logica(FachadaCajaDeSeguridad):
         
         clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if clave_existente is not None:
-            return "Ya existe una clave con ese nombre"
+            return "Ya existe una clave con ese nombre "
         
         nueva_clave = ClaveFavorita(nombre=nombre, clave=clave, pista=pista)
         session.add(nueva_clave)
@@ -86,17 +89,23 @@ class Logica(FachadaCajaDeSeguridad):
         return parsed_url.scheme and parsed_url.netloc
     
     def crear_login(self, nombre, email, usuario, password, url, notas):
-        err = self.validar_crear_editar_login(0, nombre, email, usuario, password, url, notas)
+        err = self.validar_crear_editar_login(-1, nombre, email, usuario, password, url, notas)
         if len(err) > 0:
             return err
         
-        nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=password, url=url, notas=notas)
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == password).first()
+        
+        nuevo_login = Elemento(tipo=TipoElemento.LOGIN, nombreElemento=nombre, email=email, usuario=usuario, clave_favorita_id=clave.id, url=url, notas=notas)
         session.add(nuevo_login)
         session.commit()
 
         return ""
     
     def validar_crear_editar_login(self, id, nombre, email, usuario, password, url, notas):
+
+        if id + 1 > len(self.elementos):
+            return "El indice es inválido"
+        
         if nombre is None or len(nombre) == 0:
             return "El campo nombre no puede estar vacío"
         
@@ -127,22 +136,15 @@ class Logica(FachadaCajaDeSeguridad):
         if not self.es_url(url): 
             return "El campo url es inválido"
         
-        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
-        if existe_nombre: 
+        if self.validar_nombre_elemento_duplicado(id, nombre):
             return "Ya existe un elemento con ese nombre"
         
         return ""
     
     def dar_clave(self, nombre_clave):
-        self.claves_favoritas = session.query(ClaveFavorita).all()
-
-        i = 0
-        while i < len(self.claves_favoritas):
-            if self.claves_favoritas[i]['nombre'] == nombre_clave:
-                return self.claves_favoritas[i]['id']
-            i = i+1
-
-        return None
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre_clave).first()
+        if clave is not None:
+            return clave.clave
 
     def editar_clave(self, id,  nombre, clave, pista):
         if nombre is None or len(nombre) == 0:
@@ -212,7 +214,27 @@ class Logica(FachadaCajaDeSeguridad):
         return SC + 0.5 + V * 0.2 + R * 0.3
     
     def calcular_avencer(self, elementos): #TODO: pendiente de implementar cuando agregemos las inserciones para todos los tipos de elementos
-        return 0
+        contar = 0
+        hoy = datetime.date.today()
+
+        for elemento in elementos:
+            fecha = elemento.fechaVenc
+            if fecha is not None:
+                anos = fecha.year - hoy.year
+                meses = fecha.month - hoy.month 
+
+                if  fecha.day < hoy.day:
+                    meses -= 1
+                if meses < 0:
+                    anos -= 1
+                    meses += 12
+                diferencia = anos * 12 + meses
+
+                if diferencia < 3:
+                    print(elemento.nombreElemento, fecha)
+                    contar += 1
+
+        return contar
     
     def dar_reporte_seguridad(self):
         claves = self.dar_claves_favoritas()
@@ -266,4 +288,136 @@ class Logica(FachadaCajaDeSeguridad):
         if pista is None or len(pista) == 0:
             return "El campo pista no puede estar vacío"
         
+        return ""
+    
+    def eliminar_elemento(self, id):
+        elemento = self.elementos[id]
+        session.delete(elemento)
+        session.commit()
+        
+        del self.elementos[id]
+
+    def crear_id(self, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(-1, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        nuevo = Elemento(tipo=TipoElemento.IDENTIFICACION, nombreElemento=nombre_elemento,
+                         numero=numero, nombre=nombre_completo, fechaNacimiento=parse(fnacimiento),
+                         fechaExp=parse(fexpedicion), fechaVenc=parse(fvencimiento), notas=notas)
+        session.add(nuevo)
+        session.commit()
+        
+        return ""
+
+    def editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        error = self.validar_crear_editar_id(id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas)
+        if len(error) > 0:
+            return error
+        
+        elemento_existente = self.elementos[id]
+            
+        elemento_existente.nombreElemento = nombre_elemento
+        elemento_existente.numero = numero
+        elemento_existente.nombre = nombre_completo
+        elemento_existente.fechaNacimiento = parse(fnacimiento)
+        elemento_existente.fechaExp = parse(fexpedicion)
+        elemento_existente.fechaVenc = parse(fvencimiento)
+        elemento_existente.notas = notas
+       
+        session.commit()
+
+        return ""
+    
+    def validar_crear_editar_id(self, id, nombre_elemento, numero, nombre_completo, fnacimiento, fexpedicion, fvencimiento, notas):
+        if id + 1 > len(self.elementos):
+            return "El indice es inválido"
+        
+        if nombre_elemento is None or len(nombre_elemento) == 0:
+            return "El campo nombre elemento no puede estar vacío"
+        
+        if numero is None or len(numero) == 0:
+            return "El campo número no puede estar vacío"
+        
+        if nombre_completo is None or len(nombre_completo) == 0:
+            return "El campo nombre completo no puede estar vacío"
+        
+        if fnacimiento is None or len(fnacimiento) == 0:
+            return "El campo fecha de nacimiento no puede estar vacío"
+        
+        if fexpedicion is None or len(fexpedicion) == 0:
+            return "El campo fecha de expedición no puede estar vacío"
+        
+        if fvencimiento is None or len(fvencimiento) == 0:
+            return "El campo fecha de vencimiento no puede estar vacío"
+        
+        if notas is None or len(notas) == 0:
+            return "El campo notas no puede estar vacío"
+        
+        if len(nombre_elemento) > 255 or len(numero) > 255 or len(nombre_completo) > 255:
+            return "Los campos no puede tener más de 255 caracteres"
+        
+        if len(notas) > 512:
+            return "El campo notas no puede tenes más de 512 caracteres"
+        
+        try:
+            parse(fnacimiento)
+        except ValueError:
+            return "El campo fecha de nacimiento es inválido"
+        datefe = None
+        try:
+            datefe = parse(fexpedicion)
+        except ValueError:
+            return "El campo fecha de expedición es inválido"
+        datefv = None
+        try:
+            datefv = parse(fvencimiento)
+        except ValueError:
+            return "El campo fecha de vencimiento es inválido"
+        if  datefv <= datefe:
+            return "El campo fecha de expedición debe ser menor a fecha de vencimiento"
+        
+        if self.validar_nombre_elemento_duplicado(id, nombre_elemento):
+            return "Ya existe un elemento con ese nombre"
+        
+        return ""
+    
+    def dar_elemento(self, id_elemento):
+        if id_elemento + 1 > len(self.elementos):
+            return None
+        
+        return self.elementos[id_elemento]
+    
+    def validar_nombre_elemento_duplicado(self, id, nombre):
+        existe_nombre = session.query(Elemento).filter(Elemento.nombreElemento == nombre).first()
+
+        if id < 0:
+            if existe_nombre is None:
+                return False
+            return True
+        
+        return existe_nombre and self.elementos[id].id != existe_nombre.id
+    
+    def dar_clave_id(self, nombre_clave):
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre_clave).first()
+        if clave is not None:
+            return clave.id
+    
+    def editar_login(self, id, nombre, email, usuario, password, url, notas):
+
+        err = self.validar_crear_editar_login(id, nombre, email, usuario, password, url, notas)
+        if len(err) > 0:
+            return err
+        
+        clave_favorita = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == password).first()
+
+        elemento_existente = self.elementos[id]            
+        elemento_existente.nombreElemento = nombre
+        elemento_existente.email = email
+        elemento_existente.usuario = usuario
+        elemento_existente.clave_favorita_id = clave_favorita.id
+        elemento_existente.url = url
+        elemento_existente.notas = notas
+        
+        session.commit()
+
         return ""
