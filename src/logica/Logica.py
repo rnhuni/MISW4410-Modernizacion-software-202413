@@ -421,3 +421,20 @@ class Logica(FachadaCajaDeSeguridad):
         session.commit()
 
         return ""
+
+    def eliminar_clave(self, clave_favorita_id):
+        try:
+            clave_favorita = self.dar_claves_favoritas()[clave_favorita_id]['id']
+            dato_clave_favorita = session.query(ClaveFavorita).filter(ClaveFavorita.id == clave_favorita).first()
+            elementos = self.dar_elementos()
+            
+            if elementos != None:
+                for elemento in self.elementos:
+                    if elemento["clave_favorita_id"] == clave_favorita:
+                        return False
+            
+            session.delete(dato_clave_favorita)
+            session.commit()
+            return True
+        except:
+            return False
