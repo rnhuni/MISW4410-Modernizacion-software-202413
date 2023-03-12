@@ -270,3 +270,49 @@ class ElementoTestCase(unittest.TestCase):
                           fnacimiento=str(fnacimiento_nuevo), fexpedicion=str(fexpedicion_nuevo), 
                           fvencimiento=str(fvencimiento_nuevo), notas=notas_nuevo)
     self.assertNotEqual(error, "")
+  
+  def test_validar_editar_elemento_login_14(self):
+
+    clave = self._insertar_clave()
+
+    nombre_elemento = self.data_factory.unique.name()
+    email = self.data_factory.unique.email()
+    usuario = self.data_factory.unique.name()
+    password = clave.nombre
+    url = self.data_factory.unique.url()
+    notas = self.data_factory.unique.text()
+
+    self.logica.crear_login(nombre=nombre_elemento, email=email, usuario=usuario, password=password, url=url, notas=notas)
+    self.logica.dar_elementos()
+
+    clave_nuevo = self._insertar_clave()
+    nombre_elemento_nuevo = self.data_factory.unique.name()
+    email_nuevo = self.data_factory.unique.email()
+    usuario_nuevo = self.data_factory.unique.name()
+    password_nuevo = clave_nuevo.nombre
+    url_nuevo = self.data_factory.unique.url()
+    notas_nuevo = self.data_factory.unique.text()
+
+    error = self.logica.editar_login(0, nombre=nombre_elemento_nuevo, email=email_nuevo, usuario=usuario_nuevo, password=password_nuevo, url=url_nuevo, notas=notas_nuevo)
+    self.assertEqual(error, "")
+
+    elemento = self.logica.dar_elemento(0)
+    elemento_password = self.logica.dar_clave_id(password_nuevo)
+
+    self.assertEqual(elemento.nombreElemento, nombre_elemento_nuevo)
+    self.assertEqual(elemento.email, email_nuevo)
+    self.assertEqual(elemento.usuario, usuario_nuevo)
+    self.assertEqual(elemento.clave_favorita_id, elemento_password)
+    self.assertEqual(elemento.url, url_nuevo)
+    self.assertEqual(elemento.notas, notas_nuevo)    
+
+    error = self.logica.editar_login(10, nombre=nombre_elemento_nuevo, email=email_nuevo, usuario=usuario_nuevo, password=password_nuevo, url=url_nuevo, notas=notas_nuevo)
+    self.assertNotEqual(error, "")
+
+    elemento = self.logica.dar_elemento(10)
+    self.assertIsNone(elemento)
+
+    nombre_nuevo_2=self.data_factory.unique.name()
+    self.logica.crear_login(nombre=nombre_nuevo_2, email=email_nuevo, usuario=usuario_nuevo, password=password_nuevo, url=url_nuevo, notas=notas_nuevo)
+    error = self.logica.editar_login(0, nombre=nombre_nuevo_2, email=email_nuevo, usuario=usuario_nuevo, password=password_nuevo, url=url_nuevo, notas=notas_nuevo)
+    self.assertNotEqual(error, "")
