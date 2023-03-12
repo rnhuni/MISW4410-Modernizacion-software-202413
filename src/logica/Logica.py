@@ -43,7 +43,7 @@ class Logica(FachadaCajaDeSeguridad):
         
         clave_existente = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre).first()
         if clave_existente is not None:
-            return "Ya existe una clave con ese nombre"
+            return "Ya existe una clave con ese nombre "
         
         nueva_clave = ClaveFavorita(nombre=nombre, clave=clave, pista=pista)
         session.add(nueva_clave)
