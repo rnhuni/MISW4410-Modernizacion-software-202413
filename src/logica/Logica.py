@@ -10,6 +10,7 @@ from sqlalchemy import exists
 from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
 from dateutil.parser import parse
+import datetime
 
 class Logica(FachadaCajaDeSeguridad):        
 
@@ -213,7 +214,27 @@ class Logica(FachadaCajaDeSeguridad):
         return SC + 0.5 + V * 0.2 + R * 0.3
     
     def calcular_avencer(self, elementos): #TODO: pendiente de implementar cuando agregemos las inserciones para todos los tipos de elementos
-        return 0
+        contar = 0
+        hoy = datetime.date.today()
+
+        for elemento in elementos:
+            fecha = elemento.fechaVenc
+            if fecha is not None:
+                anos = fecha.year - hoy.year
+                meses = fecha.month - hoy.month 
+
+                if  fecha.day < hoy.day:
+                    meses -= 1
+                if meses < 0:
+                    anos -= 1
+                    meses += 12
+                diferencia = anos * 12 + meses
+
+                if diferencia < 3:
+                    print(elemento.nombreElemento, fecha)
+                    contar += 1
+
+        return contar
     
     def dar_reporte_seguridad(self):
         claves = self.dar_claves_favoritas()
