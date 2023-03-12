@@ -32,7 +32,7 @@ class Logica(FachadaCajaDeSeguridad):
         return self.claves_favoritas
     
     def dar_elementos(self):
-        self.elementos = session.query(Elemento).options(joinedload('clave_favorita')).all()
+        self.elementos = session.query(Elemento).options(joinedload(Elemento.clave_favorita)).all()
         return self.elementos
     
     def crear_clave(self, nombre, clave, pista):
@@ -88,7 +88,7 @@ class Logica(FachadaCajaDeSeguridad):
         return parsed_url.scheme and parsed_url.netloc
     
     def crear_login(self, nombre, email, usuario, password, url, notas):
-        err = self.validar_crear_editar_login(0, nombre, email, usuario, password, url, notas)
+        err = self.validar_crear_editar_login(-1, nombre, email, usuario, password, url, notas)
         if len(err) > 0:
             return err
         
@@ -101,6 +101,10 @@ class Logica(FachadaCajaDeSeguridad):
         return ""
     
     def validar_crear_editar_login(self, id, nombre, email, usuario, password, url, notas):
+
+        if id + 1 > len(self.elementos):
+            return "El indice es inválido"
+        
         if nombre is None or len(nombre) == 0:
             return "El campo nombre no puede estar vacío"
         
@@ -131,8 +135,7 @@ class Logica(FachadaCajaDeSeguridad):
         if not self.es_url(url): 
             return "El campo url es inválido"
         
-        existe_nombre = session.query(exists().where(Elemento.nombreElemento == nombre)).scalar()
-        if existe_nombre: 
+        if self.validar_nombre_elemento_duplicado(id, nombre):
             return "Ya existe un elemento con ese nombre"
         
         return ""
@@ -372,3 +375,28 @@ class Logica(FachadaCajaDeSeguridad):
             return True
         
         return existe_nombre and self.elementos[id].id != existe_nombre.id
+    
+    def dar_clave_id(self, nombre_clave):
+        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre_clave).first()
+        if clave is not None:
+            return clave.id
+    
+    def editar_login(self, id, nombre, email, usuario, password, url, notas):
+
+        err = self.validar_crear_editar_login(id, nombre, email, usuario, password, url, notas)
+        if len(err) > 0:
+            return err
+        
+        clave_favorita = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == password).first()
+
+        elemento_existente = self.elementos[id]            
+        elemento_existente.nombreElemento = nombre
+        elemento_existente.email = email
+        elemento_existente.usuario = usuario
+        elemento_existente.clave_favorita_id = clave_favorita.id
+        elemento_existente.url = url
+        elemento_existente.notas = notas
+        
+        session.commit()
+
+        return ""
