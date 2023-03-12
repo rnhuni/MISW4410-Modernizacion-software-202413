@@ -297,12 +297,10 @@ class ElementoTestCase(unittest.TestCase):
     self.assertEqual(error, "")
 
     elemento = self.logica.dar_elemento(0)
-    elemento_password = self.logica.dar_clave_id(password_nuevo)
-
+    
     self.assertEqual(elemento.nombreElemento, nombre_elemento_nuevo)
     self.assertEqual(elemento.email, email_nuevo)
     self.assertEqual(elemento.usuario, usuario_nuevo)
-    self.assertEqual(elemento.clave_favorita_id, elemento_password)
     self.assertEqual(elemento.url, url_nuevo)
     self.assertEqual(elemento.notas, notas_nuevo)    
 

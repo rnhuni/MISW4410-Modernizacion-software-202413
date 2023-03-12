@@ -397,11 +397,6 @@ class Logica(FachadaCajaDeSeguridad):
         
         return existe_nombre and self.elementos[id].id != existe_nombre.id
     
-    def dar_clave_id(self, nombre_clave):
-        clave = session.query(ClaveFavorita).filter(ClaveFavorita.nombre == nombre_clave).first()
-        if clave is not None:
-            return clave.id
-    
     def editar_login(self, id, nombre, email, usuario, password, url, notas):
 
         err = self.validar_crear_editar_login(id, nombre, email, usuario, password, url, notas)
@@ -428,11 +423,9 @@ class Logica(FachadaCajaDeSeguridad):
             dato_clave_favorita = session.query(ClaveFavorita).filter(ClaveFavorita.id == clave_favorita).first()
             elementos = self.dar_elementos()
             
-            if elementos != None:
-                for elemento in self.elementos:
-                    if elemento["clave_favorita_id"] == clave_favorita:
-                        return False
-            
+            for elemento in elementos:
+                if elemento["clave_favorita_id"] == clave_favorita:
+                    return False
             session.delete(dato_clave_favorita)
             session.commit()
             return True

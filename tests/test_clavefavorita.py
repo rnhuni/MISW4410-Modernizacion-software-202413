@@ -12,6 +12,12 @@ class ClaveFavoritaTestCase(unittest.TestCase):
     self.data_factory = Faker()
     Faker.seed(1000)
   
+  def _dar_clave_id(self, claves, nombre_clave):
+    for index, clave in enumerate(claves):
+      if clave.nombre == nombre_clave:
+        return  index
+    return -1
+        
   def test_evaluar_clavesfavoritas_01(self):
     claves = self.logica.dar_claves_favoritas()
     self.assertIsNot(claves, None)
@@ -141,22 +147,35 @@ class ClaveFavoritaTestCase(unittest.TestCase):
 
   def test_validar_clave_favorita_en_elemento_12(self):
     nombre_clave = self.data_factory.unique.name()
+    nombre_clave_2 = self.data_factory.unique.name()
     clave = self.data_factory.unique.password(special_chars=False)
     self.logica.crear_clave(nombre=nombre_clave, clave=clave, pista=clave)
     
+    self.logica.crear_clave(nombre=nombre_clave_2, clave=clave, pista=clave)
+    claves = self.logica.dar_claves_favoritas()
+    consulta = self._dar_clave_id(claves, nombre_clave_2)
+    respuesta = self.logica.eliminar_clave(consulta)
+    self.assertEqual(respuesta, True)
+    
     texto_normal = self.data_factory.text()
-    self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=self.data_factory.unique.name(), password=nombre_clave, url=self.data_factory.unique.url(), notas=texto_normal)
-      
-    consulta = self.logica.dar_clave_id(nombre_clave)
-    respuesta = self.logica.eliminar_clave(consulta-1)
+    error = self.logica.crear_login(nombre=self.data_factory.unique.name(), email=self.data_factory.unique.email(), usuario=self.data_factory.unique.name(), password=nombre_clave, url=self.data_factory.unique.url(), notas=texto_normal)
+    self.assertEqual(error, "")
 
+    claves = self.logica.dar_claves_favoritas()
+    self.logica.dar_elementos()
+    consulta = self._dar_clave_id(claves, nombre_clave)
+    respuesta = self.logica.eliminar_clave(consulta)
     self.assertEqual(respuesta, False)
 
     nombre_clave_nuevo = self.data_factory.unique.name()
     clave_nuevo = self.data_factory.unique.password(special_chars=False)
     self.logica.crear_clave(nombre=nombre_clave_nuevo, clave=clave_nuevo, pista=clave_nuevo)
 
-    consulta = self.logica.dar_clave_id(nombre_clave_nuevo)
-    respuesta = self.logica.eliminar_clave(consulta-1)
+    respuesta = self.logica.eliminar_clave(15)
+    self.assertEqual(respuesta, False)
+
+    claves = self.logica.dar_claves_favoritas()
+    consulta = self._dar_clave_id(claves, nombre_clave_nuevo)
+    respuesta = self.logica.eliminar_clave(consulta)
 
     self.assertEqual(respuesta, True)
