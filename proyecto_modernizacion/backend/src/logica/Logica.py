@@ -8,9 +8,6 @@ from src.modelo.elemento import Elemento, TipoElemento
 from src.modelo.declarative_base import engine, Base, session
 from sqlalchemy import exists
 from sqlalchemy.orm import joinedload
-from urllib.parse import urlparse
-from dateutil.parser import parse
-import datetime
 
 class Logica(FachadaCajaDeSeguridad):
     def __init__(self):
