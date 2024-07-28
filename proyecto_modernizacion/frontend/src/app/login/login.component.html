@@ -1,0 +1,16 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white p-6 md:p-10 rounded-lg shadow-lg w-4/5 md:w-1/5">
+    <h2 class="text-2xl font-bold mb-5">Iniciar sesión</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Correo</label>
+        <input type="email" [(ngModel)]="email" name="email" required class="border rounded w-full py-2 px-3 text-gray-700" />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+        <input type="password" [(ngModel)]="password" name="password" required class="border rounded w-full py-2 px-3 text-gray-700" />
+      </div>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</button>
+    </form>
+  </div>
+</div>
