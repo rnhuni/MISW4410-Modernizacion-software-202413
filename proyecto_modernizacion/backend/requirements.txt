@@ -1,0 +1,10 @@
+flask
+flask-Cors
+flask-JWT-Extended
+flask-JWT
+flask-RESTful
+flask-SQLAlchemy
+marshmallow_sqlalchemy
+python-dotenv
+psycopg2-binary
+gunicorn==20.0.4flask run
